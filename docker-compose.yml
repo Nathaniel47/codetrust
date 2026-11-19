@@ -1,0 +1,15 @@
+services:
+  dashboard:
+    build: .
+    ports: ["8501:8501"]
+    env_file:
+      - path: .env
+        required: false
+    mem_limit: 1g
+    pids_limit: 256
+    read_only: true
+    tmpfs: ["/tmp", "/home/app/.streamlit"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+# The sandbox that runs generated code (no network, read-only, non-root) is a separate image
+# added in a later step; it is never started from this file.

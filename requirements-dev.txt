@@ -1,0 +1,6 @@
+# Dev and CI dependencies. CI installs this file (which includes requirements.txt).
+-r requirements.txt
+pytest>=8.0
+ruff>=0.5
+pre-commit>=3.7
+matplotlib>=3.8

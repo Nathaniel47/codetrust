@@ -1,0 +1,23 @@
+{
+  "name": "codetrust",
+  "displayName": "CodeTrust",
+  "description": "Flags risky patterns in AI-generated code inline",
+  "version": "0.0.1",
+  "private": true,
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Linters", "Other"],
+  "activationEvents": ["onLanguage:python"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [{ "command": "codetrust.scanSelection", "title": "CodeTrust: Scan selection" }]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  }
+}
