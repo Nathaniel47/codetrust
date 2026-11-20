@@ -14,9 +14,12 @@ def cache_key(
     temperature: float | None,
     seed: int | None,
     repeat: int = 0,
+    max_tokens: int | None = None,
 ) -> str:
     payload = json.dumps(
-        [provider, model, messages, temperature, seed, repeat], sort_keys=True, ensure_ascii=False
+        [provider, model, messages, temperature, seed, repeat, max_tokens],
+        sort_keys=True,
+        ensure_ascii=False,
     )
     return hashlib.sha256(payload.encode()).hexdigest()
 

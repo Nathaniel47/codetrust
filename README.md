@@ -34,6 +34,17 @@ streamlit run dashboard/app.py
 
 **Extension**: `cd extension && npm install && npm run compile`.
 
+## Generate code with the models
+
+```bash
+python -m codetrust.llm.verify                                   # check model IDs and keys
+python -m codetrust.generate.runner --models groq --tasks pilot  # 5 tasks x 10 wordings
+python -m codetrust.generate.runner --models groq,gemini,mistral,openrouter
+python -m codetrust.generate.runner --models scripted            # free offline test model
+```
+
+A run that hits a daily free-tier limit exits with code 75; run the same command again after 00:00 UTC. Answers are cached, so nothing is paid for twice.
+
 ## Secrets
 
 Keys are read only from environment variables named `CODETRUST_*` (see `.env.example`). Enable the hooks with `pre-commit install` (includes a gitleaks scan).
