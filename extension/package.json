@@ -1,19 +1,37 @@
 {
   "name": "codetrust",
   "displayName": "CodeTrust",
-  "description": "Flags risky patterns in AI-generated code inline",
-  "version": "0.0.1",
-  "private": true,
+  "description": "Flags risky patterns in AI-generated Python code inline. Runs locally, sends nothing anywhere.",
+  "version": "0.1.0",
+  "publisher": "codetrust-dev",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/Nathaniel47/codetrust" },
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Linters", "Other"],
   "activationEvents": ["onLanguage:python"],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [{ "command": "codetrust.scanSelection", "title": "CodeTrust: Scan selection" }]
+    "commands": [
+      { "command": "codetrust.scanSelection", "title": "CodeTrust: Scan selection or file" },
+      { "command": "codetrust.clear", "title": "CodeTrust: Clear warnings" }
+    ],
+    "configuration": {
+      "title": "CodeTrust",
+      "properties": {
+        "codetrust.scope": {
+          "type": "string",
+          "enum": ["insertions", "file"],
+          "default": "insertions",
+          "description": "insertions: scan only blocks that appear at once (accepted suggestions, pastes). file: rescan the whole file on every change."
+        }
+      }
+    }
   },
   "scripts": {
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "test": "tsc -p ./ && node --test",
+    "evaluate": "tsc -p ./ && node scripts/evaluate.js"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

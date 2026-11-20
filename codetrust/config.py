@@ -25,3 +25,18 @@ PROVIDER_KEY_VARS = {
     "mistral": "CODETRUST_MISTRAL_API_KEY",
     "openrouter": "CODETRUST_OPENROUTER_API_KEY",
 }
+
+# Which scanner CWE ids count as "in scope" for each task family (the family's own weakness and
+# its close relatives). A finding outside the family is reported separately, not counted.
+FAMILY_CWES = {
+    "sql_injection": {89, 564},
+    "xss": {79, 80, 116},
+    "path_traversal": {22, 23, 36, 73},
+    "command_injection": {77, 78, 88},
+    "hardcoded_secrets": {259, 321, 547, 798},
+    "weak_crypto": {326, 327, 328, 330, 338, 916},
+    "broken_access_control": {284, 285, 306, 639, 862, 863},
+    "ssrf": {918},
+    "insecure_deserialization": {502},
+    "unsafe_upload_redirect": {434, 601},
+}

@@ -1,0 +1,177 @@
+# Semgrep rules written for CodeTrust (not copied from the Semgrep registry, whose rules carry a
+# separate licence). They are deliberately generic for each weakness, not fitted to the 50 tasks.
+rules:
+  - id: codetrust.sql-string-built-query
+    languages: [python]
+    severity: ERROR
+    message: SQL query built from a formatted string; use placeholders.
+    metadata: {cwe: ["CWE-89"]}
+    pattern-either:
+      - pattern: $C.execute(f"...{...}...", ...)
+      - pattern: $C.execute("..." % ..., ...)
+      - pattern: $C.execute("...".format(...), ...)
+      - pattern: $C.execute("..." + $X, ...)
+      - pattern: $C.executescript(f"...{...}...")
+
+  - id: codetrust.html-built-from-fstring
+    languages: [python]
+    severity: ERROR
+    message: HTML built by string formatting without escaping the inserted value.
+    metadata: {cwe: ["CWE-79"]}
+    patterns:
+      - pattern-regex: return\s+f?["'][^\n]*<[a-zA-Z/][^\n]*\{[^}]*\}
+      - pattern-not-regex: escape\(
+    paths:
+      exclude: ["*test*"]
+
+  - id: codetrust.template-string-from-fstring
+    languages: [python]
+    severity: ERROR
+    message: Template or markup built from a formatted string.
+    metadata: {cwe: ["CWE-79"]}
+    pattern-either:
+      - pattern: render_template_string(f"...{...}...", ...)
+      - pattern: Markup(f"...{...}...")
+
+  - id: codetrust.file-open-user-path
+    languages: [python]
+    severity: ERROR
+    message: File path joined from a caller-supplied part and used without a containment check.
+    metadata: {cwe: ["CWE-22"]}
+    pattern-either:
+      - pattern: open(os.path.join(..., $X), ...)
+      - pattern: os.listdir(os.path.join(..., $X))
+      - pattern: send_file(os.path.join(..., $X))
+
+  - id: codetrust.shell-command-from-variable
+    languages: [python]
+    severity: ERROR
+    message: Command run through a shell with a non-constant string.
+    metadata: {cwe: ["CWE-78"]}
+    patterns:
+      - pattern-either:
+          - pattern: os.system($CMD)
+          - pattern: os.popen($CMD, ...)
+          - pattern: subprocess.getoutput($CMD)
+          - pattern: subprocess.getstatusoutput($CMD)
+          - pattern: subprocess.$F($CMD, ..., shell=True, ...)
+      - pattern-not: $FN("...", ...)
+
+  - id: codetrust.secret-literal-default
+    languages: [python]
+    severity: ERROR
+    message: Secret with a hard-coded fallback value.
+    metadata: {cwe: ["CWE-798"]}
+    patterns:
+      - pattern-either:
+          - pattern: os.environ.get($NAME, "...")
+          - pattern: os.getenv($NAME, "...")
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: (?i).*(secret|password|passwd|token|api_?key|private_?key).*
+
+  - id: codetrust.secret-literal-assigned
+    languages: [python]
+    severity: ERROR
+    message: Secret assigned from a string literal.
+    metadata: {cwe: ["CWE-798"]}
+    pattern-either:
+      - pattern: $APP.secret_key = "..."
+      - pattern: $APP.config["SECRET_KEY"] = "..."
+      - patterns:
+          - pattern: $NAME = "..."
+          - metavariable-regex:
+              metavariable: $NAME
+              regex: (?i)_?(secret|password|passwd|token|api_?key|private_?key)\w*
+          - pattern-not: $NAME = ""
+
+  - id: codetrust.weak-hash
+    languages: [python]
+    severity: WARNING
+    message: MD5 or SHA-1 is not suitable for passwords, signatures or tokens.
+    metadata: {cwe: ["CWE-327"]}
+    pattern-either:
+      - pattern: hashlib.md5(...)
+      - pattern: hashlib.sha1(...)
+      - pattern: hashlib.new("md5", ...)
+      - pattern: hashlib.new("sha1", ...)
+
+  - id: codetrust.ecb-mode
+    languages: [python]
+    severity: ERROR
+    message: ECB mode leaks patterns in the plaintext.
+    metadata: {cwe: ["CWE-327"]}
+    pattern-either:
+      - pattern: modes.ECB()
+      - pattern: AES.new($K, AES.MODE_ECB, ...)
+
+  - id: codetrust.predictable-random-for-secret
+    languages: [python]
+    severity: WARNING
+    message: random is not cryptographically secure; use secrets for tokens and codes.
+    metadata: {cwe: ["CWE-338"]}
+    pattern-either:
+      - pattern: random.choice(...)
+      - pattern: random.choices(...)
+      - pattern: random.randint(...)
+      - pattern: random.randrange(...)
+      - pattern: random.getrandbits(...)
+      - pattern: random.random()
+
+  - id: codetrust.unsafe-deserialization
+    languages: [python]
+    severity: ERROR
+    message: Deserializing data that may come from a user can run code.
+    metadata: {cwe: ["CWE-502"]}
+    pattern-either:
+      - pattern: pickle.loads(...)
+      - pattern: pickle.load(...)
+      - pattern: marshal.loads(...)
+      - pattern: yaml.unsafe_load(...)
+      - patterns:
+          - pattern: yaml.load(...)
+          - pattern-not: yaml.load(..., Loader=yaml.SafeLoader)
+          - pattern-not: yaml.load(..., Loader=yaml.CSafeLoader)
+
+  - id: codetrust.http-request-to-variable-url
+    languages: [python]
+    severity: WARNING
+    message: Server-side request to a URL that is not a constant; check where it points.
+    metadata: {cwe: ["CWE-918"]}
+    patterns:
+      - pattern-either:
+          - pattern: requests.$M($URL, ...)
+          - pattern: urllib.request.urlopen($URL, ...)
+      - pattern-not: requests.$M("...", ...)
+      - pattern-not: urllib.request.urlopen("...", ...)
+      - pattern-not-inside: |
+          import ipaddress
+          ...
+
+  - id: codetrust.redirect-to-request-value
+    languages: [python]
+    severity: ERROR
+    message: Redirect target comes from the request.
+    metadata: {cwe: ["CWE-601"]}
+    mode: taint
+    pattern-sources:
+      - pattern: request.args.get(...)
+      - pattern: request.args[...]
+      - pattern: request.form.get(...)
+    pattern-sanitizers:
+      - pattern: $T if $COND else $DEFAULT
+    pattern-sinks:
+      - pattern: redirect(...)
+
+  - id: codetrust.upload-saved-under-client-name
+    languages: [python]
+    severity: ERROR
+    message: Uploaded file saved under the client's file name without checks.
+    metadata: {cwe: ["CWE-434"]}
+    patterns:
+      - pattern-either:
+          - pattern: $F.save(os.path.join(..., $F.filename))
+          - pattern: $F.save(..., $F.filename)
+      - pattern-not-inside: |
+          import werkzeug
+          ...

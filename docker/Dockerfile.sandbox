@@ -1,0 +1,7 @@
+FROM python:3.11-slim
+COPY docker/sandbox-requirements.txt /tmp/req.txt
+RUN pip install --no-cache-dir -r /tmp/req.txt && rm /tmp/req.txt
+RUN useradd --uid 1000 --create-home sandbox
+USER sandbox
+WORKDIR /work
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PYTHONPATH=/repo

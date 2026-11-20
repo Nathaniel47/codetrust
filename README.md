@@ -45,6 +45,29 @@ python -m codetrust.generate.runner --models scripted            # free offline 
 
 A run that hits a daily free-tier limit exits with code 75; run the same command again after 00:00 UTC. Answers are cached, so nothing is paid for twice.
 
+## Score the generations
+
+Needs Docker (images: `codetrust-sandbox`, `codetrust-codeql`, `semgrep/semgrep`).
+
+```bash
+docker build -t codetrust-sandbox -f docker/Dockerfile.sandbox .
+docker build -t codetrust-codeql -f docker/Dockerfile.codeql .   # large: downloads the CodeQL bundle
+docker pull semgrep/semgrep:latest
+python -m codetrust.scan.validate               # how good are the scanners on known answers?
+python -m codetrust.score.run --models scripted-60
+streamlit run dashboard/app.py                  # per model, per family, wording effect, drill-down
+```
+
+Generated code only ever runs inside the sandbox container (no network, read-only, non-root).
+
+## VS Code extension
+
+```bash
+cd extension && npm install && npm test         # rule tests
+npm run evaluate                                # precision/recall on dev and held-out test tasks
+npx @vscode/vsce package --no-dependencies      # builds the .vsix
+```
+
 ## Secrets
 
 Keys are read only from environment variables named `CODETRUST_*` (see `.env.example`). Enable the hooks with `pre-commit install` (includes a gitleaks scan).

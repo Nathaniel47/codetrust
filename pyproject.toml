@@ -18,5 +18,9 @@ select = ["E", "F", "I", "B", "UP"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
-addopts = "-q -m 'not slow'"
-markers = ["slow: runs every task's reference and vulnerable solutions (several minutes)"]
+addopts = "-q -m 'not slow and not docker and not codeql'"
+markers = [
+    "slow: runs every task's reference and vulnerable solutions (several minutes)",
+    "docker: needs Docker and the codetrust-sandbox image or the Semgrep image",
+    "codeql: needs the codetrust-codeql image (large)",
+]
