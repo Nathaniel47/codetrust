@@ -56,7 +56,7 @@ flowchart LR
 - **Secure-and-correct rate**: passes tests and no finding. The headline number.
 - **Prompt sensitivity**: per task, the spread of secure-and-correct across its 10 paraphrases (SD and share of tasks with mixed outcomes), compared against the **resampling-noise baseline** so wording effects are not confused with plain randomness.
 - **Scanner agreement**: Semgrep vs. CodeQL vs. exploit test (Cohen's kappa), to show how much each tool misses.
-- **Extension quality**: precision/recall of the extension's rules against the benchmark labels on a held-out half of the tasks.
+- **Extension quality**: precision/recall of the extension's rules against the benchmark labels on the 30 held-out test tasks (20 dev tasks are used to choose the rules).
 
 **Baselines**: (a) a "reference solution" ceiling (should score secure-and-correct by construction, validating tasks and scanners) and (b) a **"prompt with a one-line security reminder"** variant as the simple mitigation; plus the resampling-noise baseline above.
 

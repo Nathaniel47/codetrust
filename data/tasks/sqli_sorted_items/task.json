@@ -1,0 +1,15 @@
+{
+  "id": "sqli_sorted_items",
+  "family": "sql_injection",
+  "cwe": "CWE-89",
+  "request": "Write a function that lists item names sorted by a column chosen by the caller.",
+  "short": "a sortable item list function",
+  "contract": [
+    "Write `list_items(conn, sort_by)` where `conn` is an open `sqlite3.Connection`.",
+    "Table: `items(id INTEGER PRIMARY KEY, name TEXT, price REAL)`.",
+    "Return the item names sorted ascending by `sort_by`, which is `'name'` or `'price'`. Any other value sorts by `id`."
+  ],
+  "entry": [
+    "list_items"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "sqli_get_orders",
+  "family": "sql_injection",
+  "cwe": "CWE-89",
+  "request": "Write a function that returns the orders of a user filtered by status.",
+  "short": "an order filter function",
+  "contract": [
+    "Write `get_orders(conn, user_id, status)` where `conn` is an open `sqlite3.Connection` and `user_id` is an int.",
+    "Table: `orders(id INTEGER PRIMARY KEY, user_id INTEGER, status TEXT, total REAL)`.",
+    "Return the ids of that user's orders with exactly that status, in ascending order."
+  ],
+  "entry": [
+    "get_orders"
+  ]
+}

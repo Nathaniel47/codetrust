@@ -42,6 +42,26 @@ Keys are read only from environment variables named `CODETRUST_*` (see `.env.exa
 
 Generated code is only analysed or run inside a locked-down sandbox, never against real services or data. All test data is synthetic.
 
+## Dataset
+
+- `data/tasks/<id>/`: 50 self-written tasks (5 for each of 10 vulnerability families). Each has `task.json` (request and contract), `reference.py` (safe solution), `vulnerable.py` (deliberately flawed solution), `test_correct.py` and `test_security.py`.
+- `data/paraphrases.jsonl`: 500 prompts (10 wordings per task). `data/splits.json`: seeded dev/test split by task (20 dev, 30 test).
+- `results/data_report.md`: counts, sample records and quality problems. `results/task_validation.json`: proof that each security test fails on the vulnerable solution and passes on the reference.
+- Rebuild: `python -m codetrust.tasks.build`. Check every task (several minutes): `python -m codetrust.tasks.validate`.
+
 ## Licences and data sources
 
-Recorded in Step 3 (tasks are self-written; public benchmarks are used for reference only).
+Checked 2026-11-20.
+
+| Source | How it is used | Licence / terms |
+|---|---|---|
+| Tasks, paraphrases, tests (this repo) | Written for this project, no text copied from elsewhere | Code MIT; dataset CC BY 4.0 (proposed, to be confirmed before release) |
+| HumanEval (openai/human-eval) | Reference only, nothing copied | MIT |
+| SecurityEval (s2e-lab/SecurityEval) | Reference only, nothing copied | No licence declared on GitHub, so no content reused |
+| LLMSecEval (tuhh-softsec/LLMSecEval) | Reference only, nothing copied | No licence declared on GitHub, so no content reused |
+| CyberSecEval (meta-llama/PurpleLlama) | Reference only, nothing copied | Mixed licences across the repo, not used |
+| Test dependencies: Flask, requests, PyYAML, cryptography | Imported by tests and by reference solutions | BSD-3 / Apache-2.0 / MIT / Apache-2.0 or BSD |
+
+Still to check before use: Semgrep rule licence and CodeQL terms (Step 5), and each model provider's terms on publishing generated code (Step 4).
+
+All test data is synthetic: users, emails and secrets are made up and use `.test` / `example.test` domains.

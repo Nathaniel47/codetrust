@@ -1,0 +1,14 @@
+{
+  "id": "xss_search_page",
+  "family": "xss",
+  "cwe": "CWE-79",
+  "request": "Write a function that builds a search results page header and list in HTML.",
+  "short": "a search results renderer",
+  "contract": [
+    "Write `render_search_page(query, results)` where `query` is the text the visitor typed and `results` is a list of result titles (strings).",
+    "Return an HTML string containing `<h1>Results for \"QUERY\"</h1>` followed by `<ul>` with one `<li>TITLE</li>` per result and `</ul>`."
+  ],
+  "entry": [
+    "render_search_page"
+  ]
+}

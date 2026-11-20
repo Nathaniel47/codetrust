@@ -1,0 +1,1252 @@
+[
+  {
+    "id": "ac_admin_stats",
+    "family": "broken_access_control",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ac_delete_user",
+    "family": "broken_access_control",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ac_get_order",
+    "family": "broken_access_control",
+    "ref_correct": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ac_list_invoices",
+    "family": "broken_access_control",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ac_update_profile",
+    "family": "broken_access_control",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ci_convert_image",
+    "family": "command_injection",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ci_dns_lookup",
+    "family": "command_injection",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ci_git_log",
+    "family": "command_injection",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ci_gzip_file",
+    "family": "command_injection",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ci_ping_host",
+    "family": "command_injection",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "des_cache_file",
+    "family": "insecure_deserialization",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "des_cart_cookie",
+    "family": "insecure_deserialization",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "des_config",
+    "family": "insecure_deserialization",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "des_session",
+    "family": "insecure_deserialization",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "des_worker_message",
+    "family": "insecure_deserialization",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "hc_api_headers",
+    "family": "hardcoded_secrets",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "hc_db_config",
+    "family": "hardcoded_secrets",
+    "ref_correct": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "hc_flask_secret",
+    "family": "hardcoded_secrets",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "hc_token_signing",
+    "family": "hardcoded_secrets",
+    "ref_correct": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "hc_webhook_signature",
+    "family": "hardcoded_secrets",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "pt_extract_zip",
+    "family": "path_traversal",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "pt_list_dir",
+    "family": "path_traversal",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "pt_read_file",
+    "family": "path_traversal",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "pt_save_note",
+    "family": "path_traversal",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "pt_static_route",
+    "family": "path_traversal",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "sqli_delete_comment",
+    "family": "sql_injection",
+    "ref_correct": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "sqli_find_user",
+    "family": "sql_injection",
+    "ref_correct": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "sqli_get_orders",
+    "family": "sql_injection",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "sqli_search_products",
+    "family": "sql_injection",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "sqli_sorted_items",
+    "family": "sql_injection",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ssrf_check_webhook",
+    "family": "ssrf",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ssrf_image_size",
+    "family": "ssrf",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ssrf_import_feed",
+    "family": "ssrf",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ssrf_preview",
+    "family": "ssrf",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "ssrf_proxy_route",
+    "family": "ssrf",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "uu_allowed_file",
+    "family": "unsafe_upload_redirect",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "uu_checkout_return",
+    "family": "unsafe_upload_redirect",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "uu_login_redirect",
+    "family": "unsafe_upload_redirect",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "uu_redirect_route",
+    "family": "unsafe_upload_redirect",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "uu_upload_endpoint",
+    "family": "unsafe_upload_redirect",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 2,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "wc_encrypt",
+    "family": "weak_crypto",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 2,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 1,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "wc_otp",
+    "family": "weak_crypto",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "wc_password_hash",
+    "family": "weak_crypto",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "wc_reset_token",
+    "family": "weak_crypto",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "wc_sign_message",
+    "family": "weak_crypto",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "xss_comments",
+    "family": "xss",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "xss_flask_hello",
+    "family": "xss",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "xss_greeting",
+    "family": "xss",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "xss_profile_card",
+    "family": "xss",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  },
+  {
+    "id": "xss_search_page",
+    "family": "xss",
+    "ref_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "ref_security": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_correct": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0
+    },
+    "vuln_security": {
+      "passed": 0,
+      "failed": 1,
+      "errors": 0
+    },
+    "problems": []
+  }
+]
