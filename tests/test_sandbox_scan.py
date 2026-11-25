@@ -114,8 +114,13 @@ def test_real_sandbox_runs_generated_code_without_network(tmp_path):
 @pytest.mark.docker
 def test_real_semgrep_flags_the_vulnerable_sql_solution(tmp_path):
     task = TASKS["sqli_find_user"]
-    (tmp_path / "vuln.py").write_text(task.read("vulnerable.py"), encoding="utf-8")
-    (tmp_path / "safe.py").write_text(task.read("reference.py"), encoding="utf-8")
-    result = scan_runner.scan_files(Path(tmp_path), ("semgrep",))
+    # pytest's tmp_path is private to its owner on Linux, but the scanner container runs as a
+    # different user, so mount a world-readable folder like the ones export_code creates.
+    code_dir = tmp_path / "code"
+    code_dir.mkdir()
+    code_dir.chmod(0o755)
+    (code_dir / "vuln.py").write_text(task.read("vulnerable.py"), encoding="utf-8")
+    (code_dir / "safe.py").write_text(task.read("reference.py"), encoding="utf-8")
+    result = scan_runner.scan_files(Path(code_dir), ("semgrep",))
     assert any(89 in f["cwe"] for f in result["vuln"])
     assert result["safe"] == []
