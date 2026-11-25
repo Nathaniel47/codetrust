@@ -34,7 +34,8 @@ class LLMClient:
         self.tokens_used = 0
 
     def complete(self, prompt: str, system: str | None = None, repeat: int = 0) -> str:
-        """`repeat` is part of the cache key so repeated samples of one prompt stay independent."""
+        """Each repeat gets its own cache entry and its own seed (`seed + repeat`): with one fixed
+        seed a provider may return the same text every time, hiding the sampling noise."""
         messages = ([{"role": "system", "content": system}] if system else []) + [
             {"role": "user", "content": prompt}
         ]
@@ -54,9 +55,8 @@ class LLMClient:
         estimate = estimate_tokens((system or "") + prompt) + self.max_tokens // 2
         if self.budget:
             self.budget.before_call(estimate)
-        text, tokens = self.backend(
-            self.model, messages, self.temperature, self.seed, self.max_tokens
-        )
+        seed = None if self.seed is None else self.seed + repeat
+        text, tokens = self.backend(self.model, messages, self.temperature, seed, self.max_tokens)
         tokens = tokens or estimate
         if self.budget:
             self.budget.record(tokens)

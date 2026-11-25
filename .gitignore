@@ -20,6 +20,8 @@ llm_cache/
 data/raw/
 data/generated/
 results/*.log
+# dry-run output of the evaluation code (test model, not results)
+results/evaluation_dryrun/
 
 # node / extension
 node_modules/

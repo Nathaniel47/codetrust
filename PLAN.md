@@ -56,7 +56,7 @@ flowchart LR
 - **Functional pass rate** (pass@1 over the correctness tests) per model, task and paraphrase.
 - **Vulnerable rate**: share of generations with an in-scope scanner finding or a successful exploit test, reported separately and combined, with 95% bootstrap CIs.
 - **Secure-and-correct rate**: passes tests and no finding. The headline number.
-- **Prompt sensitivity**: per task, the spread of secure-and-correct across its 10 paraphrases (SD and share of tasks with mixed outcomes), compared against the **resampling-noise baseline** so wording effects are not confused with plain randomness.
+- **Prompt sensitivity**: per task, the spread of secure-and-correct across its 10 paraphrases (SD and share of tasks with mixed outcomes), compared against a **resampling-noise baseline** so wording effects are not confused with plain randomness: the chance that two different wordings of a task disagree minus the chance that two samples of the same prompt disagree (a like-for-like comparison; comparing "mixed across 10 wordings" with "mixed across 3 repeats" would overstate the wording effect). Each repeat uses its own seed.
 - **Scanner agreement**: Semgrep vs. exploit test (Cohen's kappa), to show how much each one misses.
 - **Extension quality**: precision/recall of the extension's rules against the benchmark labels on the 30 held-out test tasks (20 dev tasks are used to choose the rules).
 

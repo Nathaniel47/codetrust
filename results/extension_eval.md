@@ -7,6 +7,8 @@ flagged when at least one rule fires. Positives are vulnerable solutions.
 |---|---|---|---|---|---|---|
 | Task solutions, dev | 17 | 5 | 3 | 15 | 77% | 85% |
 | Task solutions, test | 23 | 4 | 7 | 26 | 85% | 77% |
+| Keyword baseline, dev | 16 | 13 | 4 | 7 | 55% | 80% |
+| Keyword baseline, test | 22 | 20 | 8 | 10 | 52% | 73% |
 | scripted-60 generations, dev | 105 | 12 | 21 | 62 | 90% | 83% |
 | scripted-60 generations, test | 133 | 9 | 42 | 116 | 94% | 76% |
 

@@ -8,7 +8,7 @@ import streamlit as st  # noqa: E402
 
 from codetrust import dashboard_data as dd  # noqa: E402
 from codetrust.stats.agreement import agreement_table  # noqa: E402
-from codetrust.stats.variance import resampling_noise  # noqa: E402
+from codetrust.stats.variance import main_grid, wording_vs_noise  # noqa: E402
 
 st.set_page_config(page_title="CodeTrust", layout="wide")
 st.title("CodeTrust")
@@ -39,6 +39,8 @@ st.sidebar.write(
 )
 if scores.empty:
     st.stop()
+
+every_sample, scores = scores, main_grid(scores)  # repeats are only used for the noise check
 
 overview, by_family, by_wording, by_task, agreement = st.tabs(
     ["Per model", "Per vulnerability type", "Wording effect", "Task drill-down", "Scanners"]
@@ -84,14 +86,18 @@ with by_wording:
         "of tasks where some wordings give secure and correct code and others do not."
     )
     st.dataframe(dd.spread_by_model(scores).round(3), hide_index=True)
-    noise = resampling_noise(scores, "secure_and_correct")
+    noise = wording_vs_noise(every_sample, "secure_and_correct")
     if noise.empty:
         st.caption(
             "No repeated samples of the same prompt yet, so wording effects cannot be separated "
-            "from plain randomness. Run the generator with `--repeats 3` on a subset."
+            "from plain randomness. Run the generator with `--tasks noise --repeats 3`."
         )
     else:
-        st.write("Baseline: how often the *same* prompt gives different outcomes on repeats.")
+        st.write(
+            "Chance that two answers disagree: two samples of the **same prompt**, versus two "
+            "**different wordings** of the task. Wording matters beyond randomness only if the "
+            "excess is clearly above zero."
+        )
         st.dataframe(noise.round(3), hide_index=True)
     effects = dd.axis_table(scores)
     if not effects.empty:

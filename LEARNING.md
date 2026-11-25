@@ -71,7 +71,7 @@ How to check: `pytest` (unit tests, no Docker needed). With Docker: build the sa
 ## Step 5b: Variance dashboard
 
 - **The question.** The same task is asked ten ways. If a model gives secure code for some wordings and not others, a developer's phrasing decides their security. `share_mixed_tasks` is the share of tasks where the ten wordings disagree; `mean_within_task_sd` is the average spread.
-- **Wording vs plain randomness.** A model can disagree with itself even when asked the *same* question twice. So the dashboard also reports the share of prompts that disagree across repeated samples (`resampling_noise`). Only if tasks are mixed across wordings clearly more often than prompts across repeats is wording the cause. This needs repeats (`--repeats 3` on a subset).
+- **Wording vs plain randomness.** A model can disagree with itself even when asked the *same* question twice, so wording only matters if it adds disagreement on top of that (`wording_vs_noise`, explained under Step 6). This needs repeats (`--tasks noise --repeats 3`).
 - **Confidence intervals that fit the data** (`stats/bootstrap.py`): the ten wordings of a task are not independent samples (same task, same difficulty), so the bootstrap resamples whole tasks. Treating 500 prompts as 500 independent trials would make the intervals too narrow. Reading: any short primer on the bootstrap, then "cluster bootstrap".
 - **Wording effects** (`axis_effects`): for each wording style, the change in the secure-and-correct share compared with the canonical wording, paired by task, with an interval. Use it to see whether "mentions security" or typos matter.
 - **Agreement** (`stats/agreement.py`): Cohen's kappa between Semgrep and the exploit test. Kappa is agreement beyond chance: 1 perfect, 0 chance level. Reading: the Wikipedia article on Cohen's kappa.
@@ -86,3 +86,36 @@ How to check: `pytest` (unit tests, no Docker needed). With Docker: build the sa
 - **Tested without VS Code**: the rules and the insertion detector are plain functions (`node --test`). Only the thin glue to the VS Code API is untested by automation.
 
 How to check: `cd extension && npm install && npm test`, then `npm run evaluate`. To try it by hand, open `extension/` in VS Code, press F5 and paste a block of code with `os.system(f"ping {host}")` into a Python file.
+
+## Step 6: Evaluation (code built and dry-run; real results still to come)
+
+**Metrics and why**
+
+- **Secure and correct** (headline): code is only useful if it works *and* is not exploitable. Security alone would reward code that does nothing.
+- **Correct** and **vulnerable** separately: they show *why* the headline moves.
+- **Tests-only version of the headline**: Semgrep raises false alarms, so the report shows how much the number depends on trusting it.
+- **Scorer ceiling and floor** (baseline): what always returning our safe solution, or our flawed one, would score. The ceiling is below 100% because of false alarms. A model should be read against the ceiling, not against 100%.
+- **Security reminder** (baseline mitigation): the same prompts plus "Make sure the code is secure." (`--reminder`). It is the cheapest thing a developer could do, so anything cleverer has to beat it. The wording that already contains the sentence is left out of the comparison.
+- **Keyword baseline for the extension**: flag any file that merely mentions a risky module. Rules that do not clearly beat it add nothing.
+- **Paired differences**: models, wordings and the reminder are compared on the *same* tasks, which removes "some tasks are just harder" from the comparison. Intervals resample tasks.
+- **Correction for many comparisons**: with nine wordings per model, a few 95% intervals will exclude zero by luck, so each effect is also checked with a stricter (Bonferroni) interval. Reading: a short primer on "multiple comparisons".
+
+**Four traps found before any real run** (worth understanding, because each would have produced a convincing wrong result)
+
+1. *One seed for every repeat.* A provider that honours the seed may return the same text each time, making randomness look like zero and every difference look like a wording effect. Now repeat n uses seed + n.
+2. *Unfair noise comparison.* "How often is a task mixed across 10 wordings" was compared with "how often is a prompt mixed across 3 repeats". Ten draws disagree more often than three even if wording does nothing. Now both sides are the chance that *two* answers disagree; a test on simulated pure noise gives an excess near zero.
+3. *Stale scans.* After a resumed run, new generations were not scanned again and would have counted as "no findings". Scoring now rescans, and refuses to score anything without both a test and a scan result.
+4. *Repeats counted as extra data.* Tasks sampled three times would have weighed three times as much in headline numbers. Headlines use one sample per prompt.
+
+**Seeds.** Generation: seed 1234 + repeat number. Bootstrap, task split and noise subset: fixed seed 1234. Variance across seeds is what the repeat runs measure.
+
+**The real runs** (after the pilot; for each of `groq,gemini`):
+
+1. `python -m codetrust.generate.runner --models groq,gemini` (500 per model)
+2. `python -m codetrust.generate.runner --models groq,gemini --tasks noise --repeats 3` (200 extra per model)
+3. `python -m codetrust.generate.runner --models groq,gemini --reminder` (up to 500 per model)
+4. `python -m codetrust.score.run --models groq,gemini,groq+reminder,gemini+reminder`
+5. `python -m codetrust.evaluate.report`, then `cd extension && npm run evaluate`
+
+Output goes to `results/evaluation/`. With only scripted models it goes to `results/evaluation_dryrun/`, stamped DRY RUN: those numbers test the code, not any model (the scripted model's repeats are identical by design, so its noise is zero).
+

@@ -76,8 +76,17 @@ def read_jsonl(path: Path) -> dict[str, dict]:
 def score_model(tag: str, generated_dir: Path, test_results: Path, scan_file: Path) -> list[dict]:
     tests = read_jsonl(test_results)
     scans = json.loads(scan_file.read_text(encoding="utf-8")) if scan_file.exists() else {}
-    rows = []
+    rows, missing = [], []
     for path in sorted((generated_dir / tag).glob("*.json")):
         record = json.loads(path.read_text(encoding="utf-8"))
-        rows.append(score_record(record, tests.get(record["id"]), scans.get(path.stem, [])))
+        # A missing result must never be read as "no findings" or as a failing test.
+        if record["id"] not in tests or (record.get("code") and path.stem not in scans):
+            missing.append(path.stem)
+            continue
+        rows.append(score_record(record, tests[record["id"]], scans.get(path.stem, [])))
+    if missing:
+        raise ValueError(
+            f"{tag}: {len(missing)} generations lack test or scan results (first: {missing[0]}); "
+            "run the scoring again"
+        )
     return rows

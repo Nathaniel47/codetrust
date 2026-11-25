@@ -31,6 +31,11 @@ function rates(c) {
 }
 
 const solutions = { dev: counts(), test: counts() };
+// Simple baseline: flag any file that merely mentions a risky module or function. A rule set is
+// only worth shipping if it clearly beats this.
+const KEYWORDS =
+  /\b(os|subprocess|pickle|marshal|yaml|requests|urllib|hashlib|random|redirect|execute|open|zipfile)\b/;
+const keyword = { dev: counts(), test: counts() };
 const misses = [];
 const falseAlarms = [];
 const ruleHits = {};
@@ -40,6 +45,8 @@ for (const id of Object.keys(splits).sort()) {
     const found = scanText(fs.readFileSync(path.join(dir, `${kind}.py`), "utf8"));
     found.forEach((f) => (ruleHits[f.ruleId] = (ruleHits[f.ruleId] || 0) + 1));
     add(solutions[splits[id]], kind === "vulnerable", found.length > 0);
+    const source = fs.readFileSync(path.join(dir, `${kind}.py`), "utf8");
+    add(keyword[splits[id]], kind === "vulnerable", KEYWORDS.test(source));
     if (splits[id] === "test" && kind === "vulnerable" && !found.length) misses.push(id);
     if (splits[id] === "test" && kind === "reference" && found.length)
       falseAlarms.push(`${id}: ${[...new Set(found.map((f) => f.ruleId))].join(", ")}`);
@@ -57,6 +64,7 @@ const scoresFile = path.join(root, "results", "scores.csv");
 if (fs.existsSync(scoresFile)) {
   for (const row of parseCsv(scoresFile)) {
     if (row.functional_pass !== "True") continue;
+    if (row.repeat !== "0" || row.model_tag.endsWith("+reminder")) continue; // main grid only
     const [, task, index, repeat] = row.id.split(/:/);
     const file = path.join(root, "data", "generated", row.model_tag, `${task}__${index}__${repeat}.json`);
     if (!fs.existsSync(file)) continue;
@@ -71,6 +79,7 @@ const report = {
   generations: Object.fromEntries(
     Object.entries(generations).map(([m, b]) => [m, { dev: rates(b.dev), test: rates(b.test) }])
   ),
+  keyword_baseline: { dev: rates(keyword.dev), test: rates(keyword.test) },
   test_misses: misses,
   test_false_alarms: falseAlarms,
   rule_hits: ruleHits,
@@ -89,6 +98,8 @@ const lines = [
   "|---|---|---|---|---|---|---|",
   row("Task solutions, dev", report.solutions.dev),
   row("Task solutions, test", report.solutions.test),
+  row("Keyword baseline, dev", report.keyword_baseline.dev),
+  row("Keyword baseline, test", report.keyword_baseline.test),
   ...Object.entries(report.generations).flatMap(([m, b]) => [
     row(`${m} generations, dev`, b.dev),
     row(`${m} generations, test`, b.test),

@@ -11,6 +11,7 @@ Examples:
 import argparse
 import hashlib
 import json
+import random
 import sys
 from collections import Counter
 from pathlib import Path
@@ -19,7 +20,7 @@ from codetrust.config import SEED, TEMPERATURE
 from codetrust.generate.extract import extract_code
 from codetrust.llm.budget import DailyBudgetExhausted
 from codetrust.llm.meta import update_run_meta
-from codetrust.llm.models import SYSTEM_PROMPT, make_client
+from codetrust.llm.models import REMINDER, REMINDER_SUFFIX, SYSTEM_PROMPT, make_client
 from codetrust.llm.providers import ProviderError
 from codetrust.paths import DATA_DIR, RESULTS_DIR
 from codetrust.tasks.loader import load_tasks
@@ -44,6 +45,21 @@ def pilot_task_ids() -> list[str]:
     return ids[:5]
 
 
+def noise_task_ids(seed: int = SEED) -> list[str]:
+    """The resampling-noise subset: one held-out test task per family, picked with a fixed seed."""
+    split = json.loads((DATA_DIR / "splits.json").read_text(encoding="utf-8"))
+    rng = random.Random(seed)
+    by_family: dict[str, list[str]] = {}
+    for task in load_tasks():
+        if split[task.id] == "test":
+            by_family.setdefault(task.family, []).append(task.id)
+    return [rng.choice(sorted(by_family[f])) for f in sorted(by_family)]
+
+
+def with_reminder(prompt: str) -> str:
+    return prompt if REMINDER in prompt else f"{prompt}\n\n{REMINDER}"
+
+
 def plan(rows: list[dict], tags: list[str], repeats: int, task_ids: set[str] | None):
     """Order work so an interrupted run still covers every task (wording is the outer loop)."""
     rows = [r for r in rows if task_ids is None or r["task_id"] in task_ids]
@@ -65,15 +81,17 @@ def run(
     limit: int | None = None,
     out: Path = GENERATED_DIR,
     clients: dict | None = None,
+    reminder: bool = False,
 ) -> dict:
     rows = load_paraphrases()
     clients = {} if clients is None else clients
+    suffix = REMINDER_SUFFIX if reminder else ""
     stats = {tag: Counter() for tag in tags}
     errors = 0
     stopped = None
     done_now = 0
     for tag, row, repeat in plan(rows, tags, repeats, task_ids):
-        path = record_path(out, tag, row, repeat)
+        path = record_path(out, tag + suffix, row, repeat)
         if path.exists():
             stats[tag]["existing"] += 1
             continue
@@ -84,7 +102,8 @@ def run(
             clients[tag] = make_client(tag)
         client = clients[tag]
         try:
-            reply = client.complete(row["prompt"], system=SYSTEM_PROMPT, repeat=repeat)
+            prompt = with_reminder(row["prompt"]) if reminder else row["prompt"]
+            reply = client.complete(prompt, system=SYSTEM_PROMPT, repeat=repeat)
         except DailyBudgetExhausted as exc:
             stopped = f"budget: {exc}"
             break
@@ -99,17 +118,17 @@ def run(
         errors = 0
         code, status = extract_code(reply)
         record = {
-            "id": f"{tag}:{row['id']}:r{repeat}",
+            "id": f"{tag}{suffix}:{row['id']}:r{repeat}",
             "task_id": row["task_id"],
             "paraphrase_id": row["id"],
             "axis": row["axis"],
             "family": row["family"],
-            "model_tag": tag,
+            "model_tag": tag + suffix,
             "provider": client.provider,
             "model_id": client.model,
             "repeat": repeat,
             "temperature": client.temperature,
-            "seed": client.seed,
+            "seed": None if client.seed is None else client.seed + repeat,
             "reply": reply,
             "code": code,
             "extract_status": status,
@@ -149,7 +168,12 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--models", required=True, help="comma list: groq,gemini,scripted")
     parser.add_argument("--repeats", type=int, default=1)
-    parser.add_argument("--tasks", default="all", help="'all', 'pilot' or comma list of task ids")
+    parser.add_argument(
+        "--tasks", default="all", help="'all', 'pilot', 'noise' or comma list of task ids"
+    )
+    parser.add_argument(
+        "--reminder", action="store_true", help="baseline: add a one-line security reminder"
+    )
     parser.add_argument("--limit", type=int, help="stop after this many new generations")
     args = parser.parse_args(argv)
     tags = args.models.split(",")
@@ -157,10 +181,12 @@ def main(argv=None) -> int:
         ids = None
     elif args.tasks == "pilot":
         ids = set(pilot_task_ids())
+    elif args.tasks == "noise":
+        ids = set(noise_task_ids())
     else:
         ids = set(args.tasks.split(","))
     clients = {tag: make_client(tag) for tag in tags}
-    summary = run(tags, args.repeats, ids, args.limit, clients=clients)
+    summary = run(tags, args.repeats, ids, args.limit, clients=clients, reminder=args.reminder)
     if clients:
         write_meta(tags, args.repeats, clients)
     RESULTS_DIR.mkdir(exist_ok=True)

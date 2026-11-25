@@ -6,10 +6,11 @@ from codetrust.stats.agreement import agreement_table, cohens_kappa
 from codetrust.stats.bootstrap import task_bootstrap_ci
 from codetrust.stats.variance import (
     axis_effects,
+    main_grid,
     per_task_rates,
-    resampling_noise,
     summary_with_ci,
     wording_spread,
+    wording_vs_noise,
 )
 
 AXES = ["canonical", "formal", "terse", "user_story", "verbose_context"]
@@ -49,12 +50,52 @@ def test_wording_spread_separates_stable_from_mixed_tasks():
     assert 0 < row["mean_within_task_sd"] < 0.5
 
 
-def test_resampling_noise_only_uses_prompts_with_repeats():
-    assert resampling_noise(frame({"a": [1] * 5}), "secure_and_correct").empty
+def noise_frame(prob_by_axis: dict, tasks=200, repeats=3, seed=0):
+    rng = np.random.default_rng(seed)
+    rows = []
+    for t in range(tasks):
+        for axis, prob in prob_by_axis.items():
+            for repeat in range(repeats):
+                rows.append(
+                    {
+                        "model_tag": "m",
+                        "task_id": f"t{t}",
+                        "axis": axis,
+                        "paraphrase_id": f"t{t}:{axis}",
+                        "repeat": repeat,
+                        "secure_and_correct": bool(rng.random() < prob),
+                    }
+                )
+    return pd.DataFrame(rows)
+
+
+def test_pure_randomness_shows_no_wording_effect():
+    # Averaged over several datasets: a single 95% interval misses zero 1 time in 20 by design.
+    runs = [
+        wording_vs_noise(
+            noise_frame({a: 0.5 for a in AXES}, tasks=100, seed=s), "secure_and_correct", n_boot=200
+        ).iloc[0]
+        for s in range(10)
+    ]
+    assert np.mean([r["same_prompt"] for r in runs]) == pytest.approx(0.5, abs=0.02)
+    assert np.mean([r["across_wordings"] for r in runs]) == pytest.approx(0.5, abs=0.02)
+    assert abs(np.mean([r["excess"] for r in runs])) < 0.02
+    assert sum(r["ci_low"] <= 0 <= r["ci_high"] for r in runs) >= 8
+
+
+def test_a_real_wording_effect_shows_up_as_excess():
+    probs = {a: (0.95 if i % 2 else 0.05) for i, a in enumerate(AXES)}
+    out = wording_vs_noise(noise_frame(probs), "secure_and_correct").iloc[0]
+    assert out["excess"] > 0.3 and out["ci_low"] > 0.25
+
+
+def test_noise_comparison_needs_repeats():
+    assert wording_vs_noise(frame({"a": [1] * 5}), "secure_and_correct").empty
+
+
+def test_main_grid_keeps_one_sample_per_prompt():
     df = frame({"a": [1] * 5}, repeats=3)
-    df.loc[(df.axis == "formal") & (df.repeat == 1), "secure_and_correct"] = 0
-    row = resampling_noise(df, "secure_and_correct").iloc[0]
-    assert row["prompts_with_repeats"] == 5 and row["share_mixed_prompts"] == pytest.approx(0.2)
+    assert len(main_grid(df)) == 5
 
 
 def test_bootstrap_interval_contains_mean_and_shrinks_with_more_tasks():

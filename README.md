@@ -2,7 +2,7 @@
 
 A benchmark plus VS Code extension that measures how secure and correct LLM-generated web-app code is, and how much that changes when the same request is worded differently.
 
-**Status:** features built (Step 5 of 8). No real model has been benchmarked yet; results so far come from an offline scripted test model. See [PLAN.md](PLAN.md) for the design and [BUILD_STEPS.md](BUILD_STEPS.md) for progress. Demo link, results and architecture diagram are added in Step 8.
+**Status:** features and evaluation code built (Step 6 of 8 in progress). No real model has been benchmarked yet; results so far come from an offline scripted test model. See [PLAN.md](PLAN.md) for the design and [BUILD_STEPS.md](BUILD_STEPS.md) for progress. Demo link, results and architecture diagram are added in Step 8.
 
 ## Run locally
 
@@ -56,6 +56,17 @@ streamlit run dashboard/app.py                  # per model, per family, wording
 ```
 
 Generated code only ever runs inside the sandbox container (no network, read-only, non-root).
+
+## Evaluate
+
+```bash
+python -m codetrust.generate.runner --models groq,gemini --tasks noise --repeats 3   # noise
+python -m codetrust.generate.runner --models groq,gemini --reminder                  # baseline
+python -m codetrust.score.run --models groq,gemini,groq+reminder,gemini+reminder
+python -m codetrust.evaluate.report                                                  # tables, charts, limitations
+```
+
+Run these after the main generation. Output goes to `results/evaluation/`. With only the offline test model it goes to `results/evaluation_dryrun/` and is stamped DRY RUN.
 
 ## VS Code extension
 

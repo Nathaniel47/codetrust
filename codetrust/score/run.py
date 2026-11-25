@@ -6,6 +6,7 @@ Needs Docker (sandbox image and Semgrep image). Steps already done are skipped.
 
 import argparse
 import json
+import shutil
 from pathlib import Path
 
 import pandas as pd
@@ -21,11 +22,22 @@ SCAN_DIR = RESULTS_DIR / "scan"
 SCORES = RESULTS_DIR / "scores.csv"
 
 
+def unscanned(records_dir: Path, scan_file: Path) -> list[str]:
+    """Records with code that an existing scan file does not cover (e.g. after a resumed run)."""
+    scanned = json.loads(scan_file.read_text(encoding="utf-8"))
+    return [
+        p.stem
+        for p in sorted(records_dir.glob("*.json"))
+        if p.stem not in scanned and json.loads(p.read_text(encoding="utf-8")).get("code")
+    ]
+
+
 def scan_model(tag: str, rescan: bool = False) -> Path:
     out = SCAN_DIR / f"{tag}.json"
-    if out.exists() and not rescan:
+    if out.exists() and not rescan and not unscanned(GENERATED_DIR / tag, out):
         return out
     code_dir = GENERATED_DIR / "_code" / tag
+    shutil.rmtree(code_dir, ignore_errors=True)
     export_code(GENERATED_DIR / tag, code_dir)
     SCAN_DIR.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(scan_files(code_dir)) + "\n", encoding="utf-8")
