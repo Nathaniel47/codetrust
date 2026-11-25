@@ -15,7 +15,7 @@ st.title("CodeTrust")
 st.caption(
     "How secure and correct is AI-generated web-app code, and how much does it change when the "
     "same request is worded differently? Every generation is scored automatically: unit tests, "
-    "an exploit-style security test, Semgrep and CodeQL. No model judges another model."
+    "an exploit-style security test and Semgrep. No model judges another model."
 )
 
 if not dd.SCORES.exists():
@@ -117,8 +117,7 @@ with by_task:
     row = rows[rows["id"] == chosen].iloc[0]
     st.write(
         f"Wording: **{row['axis']}** · correct: **{row['functional_pass']}** · exploitable: "
-        f"**{row['exploit_vuln']}** · Semgrep: **{row['semgrep_vuln']}** · CodeQL: "
-        f"**{row['codeql_vuln']}**"
+        f"**{row['exploit_vuln']}** · Semgrep: **{row['semgrep_vuln']}**"
     )
     if record:
         st.code(record["code"] or record["reply"], language="python")

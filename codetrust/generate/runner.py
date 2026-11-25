@@ -147,9 +147,7 @@ def write_meta(tags: list[str], repeats: int, clients: dict) -> None:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    parser.add_argument(
-        "--models", required=True, help="comma list: groq,gemini,mistral,openrouter,scripted"
-    )
+    parser.add_argument("--models", required=True, help="comma list: groq,gemini,scripted")
     parser.add_argument("--repeats", type=int, default=1)
     parser.add_argument("--tasks", default="all", help="'all', 'pilot' or comma list of task ids")
     parser.add_argument("--limit", type=int, help="stop after this many new generations")

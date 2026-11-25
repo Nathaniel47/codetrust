@@ -4,8 +4,7 @@
       "scripted-60"
     ],
     "scanners": {
-      "semgrep": "1.185.0",
-      "codeql": "2.27.5"
+      "semgrep": "1.185.0"
     }
   },
   "git_commit": "9a034dd309e96502bf063a9fe1e48df1b04eee03"

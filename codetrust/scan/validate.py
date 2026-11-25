@@ -4,10 +4,9 @@ Scans every task's safe reference solution and deliberately vulnerable solution,
 scanner and family, how many vulnerable solutions are caught (recall) and how many safe ones are
 wrongly flagged (false positives). These numbers are what limits the scanner part of the score.
 
-    python -m codetrust.scan.validate [--scanners semgrep,codeql]
+    python -m codetrust.scan.validate
 """
 
-import argparse
 import json
 from collections import defaultdict
 
@@ -16,6 +15,8 @@ from codetrust.paths import RESULTS_DIR
 from codetrust.scan.runner import scan_files
 from codetrust.score.scorer import in_family
 from codetrust.tasks.loader import load_tasks
+
+SCANNERS = ("semgrep",)
 
 
 def export_solutions(tasks, code_dir):
@@ -69,21 +70,18 @@ def render(result: dict, scanners) -> str:
     return "\n".join(lines) + "\n"
 
 
-def main(argv=None):
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--scanners", default="semgrep,codeql")
-    scanners = tuple(parser.parse_args(argv).scanners.split(","))
+def main():
     tasks = load_tasks()
     code_dir = GENERATED_DIR / "_code" / "solutions"
     export_solutions(tasks, code_dir)
-    scans = scan_files(code_dir, scanners)
-    result = evaluate(tasks, scans, scanners)
+    scans = scan_files(code_dir)
+    result = evaluate(tasks, scans, SCANNERS)
     RESULTS_DIR.mkdir(exist_ok=True)
     (RESULTS_DIR / "scanner_validation.json").write_text(
         json.dumps({"scans": scans, **result}, indent=1) + "\n", encoding="utf-8"
     )
-    (RESULTS_DIR / "scanner_validation.md").write_text(render(result, scanners), encoding="utf-8")
-    print(render(result, scanners))
+    (RESULTS_DIR / "scanner_validation.md").write_text(render(result, SCANNERS), encoding="utf-8")
+    print(render(result, SCANNERS))
 
 
 if __name__ == "__main__":

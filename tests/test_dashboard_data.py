@@ -18,7 +18,7 @@ def scores_frame():
                         "family": family, "paraphrase_id": f"{task}:{i}",
                         "axis": ["canonical", "formal"][i % 2], "repeat": 0,
                         "extract_status": "ok", "functional_pass": True, "exploit_vuln": not good,
-                        "semgrep_vuln": False, "codeql_vuln": False, "scanner_vuln": False,
+                        "semgrep_vuln": False, "scanner_vuln": False,
                         "other_high_finding": False, "vulnerable": not good,
                         "secure_and_correct": good,
                     }

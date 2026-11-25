@@ -19,7 +19,6 @@ llm_cache/
 *.db
 data/raw/
 data/generated/
-codeql-db/
 results/*.log
 
 # node / extension

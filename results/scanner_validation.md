@@ -19,23 +19,6 @@ Caught 40 of 50 vulnerable solutions; 4 of 50 safe solutions wrongly flagged.
 | weak_crypto | 5 | 5 | 0 |
 | xss | 5 | 4 | 2 |
 
-## codeql
-
-Caught 6 of 50 vulnerable solutions; 4 of 50 safe solutions wrongly flagged.
-
-| Family | Tasks | Caught | False alarms |
-|---|---|---|---|
-| broken_access_control | 5 | 0 | 0 |
-| command_injection | 5 | 0 | 0 |
-| hardcoded_secrets | 5 | 0 | 0 |
-| insecure_deserialization | 5 | 0 | 0 |
-| path_traversal | 5 | 0 | 0 |
-| sql_injection | 5 | 0 | 0 |
-| ssrf | 5 | 1 | 1 |
-| unsafe_upload_redirect | 5 | 3 | 3 |
-| weak_crypto | 5 | 2 | 0 |
-| xss | 5 | 0 | 0 |
-
 ## Vulnerable solutions that no scanner caught
 
 - `ac_admin_stats` (broken_access_control)

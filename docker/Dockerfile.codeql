@@ -1,8 +1,0 @@
-FROM ubuntu:24.04
-RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates python3 git && rm -rf /var/lib/apt/lists/*
-RUN curl -sSL https://github.com/github/codeql-action/releases/latest/download/codeql-bundle-linux64.tar.gz | tar xz -C /opt
-RUN chmod -R a+rX /opt/codeql
-ENV PATH=/opt/codeql:$PATH
-RUN userdel -r ubuntu; useradd --uid 1000 --create-home scanner
-USER scanner
-WORKDIR /work

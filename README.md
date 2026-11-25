@@ -14,7 +14,6 @@ Requires Python 3.11, Docker (for scanners and the code sandbox, later steps) an
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements-dev.txt
-copy .env.example .env   # then fill in keys; never commit .env
 pytest
 ruff check .
 streamlit run dashboard/app.py
@@ -25,7 +24,6 @@ streamlit run dashboard/app.py
 ```bash
 python3.11 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
-cp .env.example .env     # then fill in keys; never commit .env
 pytest && ruff check .
 streamlit run dashboard/app.py
 ```
@@ -39,7 +37,7 @@ streamlit run dashboard/app.py
 ```bash
 python -m codetrust.llm.verify                                   # check model IDs and keys
 python -m codetrust.generate.runner --models groq --tasks pilot  # 5 tasks x 10 wordings
-python -m codetrust.generate.runner --models groq,gemini,mistral,openrouter
+python -m codetrust.generate.runner --models groq,gemini
 python -m codetrust.generate.runner --models scripted            # free offline test model
 ```
 
@@ -47,13 +45,12 @@ A run that hits a daily free-tier limit exits with code 75; run the same command
 
 ## Score the generations
 
-Needs Docker (images: `codetrust-sandbox`, `codetrust-codeql`, `semgrep/semgrep`).
+Needs Docker (images: `codetrust-sandbox`, `semgrep/semgrep`).
 
 ```bash
 docker build -t codetrust-sandbox -f docker/Dockerfile.sandbox .
-docker build -t codetrust-codeql -f docker/Dockerfile.codeql .   # large: downloads the CodeQL bundle
 docker pull semgrep/semgrep:latest
-python -m codetrust.scan.validate               # how good are the scanners on known answers?
+python -m codetrust.scan.validate               # how good is the scanner on known answers?
 python -m codetrust.score.run --models scripted-60
 streamlit run dashboard/app.py                  # per model, per family, wording effect, drill-down
 ```
@@ -70,7 +67,7 @@ npx @vscode/vsce package --no-dependencies      # builds the .vsix
 
 ## Secrets
 
-Keys are read only from environment variables named `CODETRUST_*` (see `.env.example`). Enable the hooks with `pre-commit install` (includes a gitleaks scan).
+Keys are read only from environment variables named `CODETRUST_*` (names are listed in `.env.example`). Set them in your shell or as user environment variables: the Python commands do not load a `.env` file (only `docker compose` does). Enable the hooks with `pre-commit install` (includes a gitleaks scan).
 
 ## Safety
 
@@ -96,8 +93,17 @@ Checked 2026-11-20.
 | CyberSecEval (meta-llama/PurpleLlama) | Reference only, nothing copied | Mixed licences across the repo, not used |
 | Test dependencies: Flask, requests, PyYAML, cryptography | Imported by tests and by reference solutions | BSD-3 / Apache-2.0 / MIT / Apache-2.0 or BSD |
 
-Scanners (checked 2026-11-25): the Semgrep rules in `data/rules/` are our own, so no registry rules are used or shipped. The [CodeQL terms](https://github.com/github/codeql-cli-binaries/blob/main/LICENSE.md) allow academic research and analysis of OSI-licensed codebases, not general automated analysis, so CI never runs CodeQL. What has been scanned so far comes from this MIT repo; which permission covers real model output is still to be decided.
+### Scanner and model providers (terms read 2026-11-25)
 
-Still to check before use: each model provider's terms on publishing generated code.
+| Service | Status | Why |
+|---|---|---|
+| Semgrep | Used | The rules in `data/rules/` are our own; no registry rules are used or shipped |
+| [Groq](https://console.groq.com/docs/legal/services-agreement) (last modified 2026-06-22) | Used | Customer keeps the rights in output (8.1). No publicity or pre-approval clause found for publishing output. Generated code may carry third-party licences (4.3). **Not read:** the per-model terms (4.1) and use policy |
+| [Gemini API](https://ai.google.dev/gemini-api/terms) (effective 2026-03-23) | Used | Google does not claim the output. No pre-approval clause found. On the unpaid tier Google uses prompts and output to improve its products and people may review them (our prompts are synthetic). **Not read:** the general Google APIs terms and use policy |
+| [Mistral](https://legal.mistral.ai/terms/commercial-terms-of-service) (effective 2026-09-25) | Removed | Using its name publicly needs written approval (14.4) and "performance information" is confidential (6.1). These are the business terms; the consumer terms were not read |
+| [OpenRouter](https://openrouter.ai/terms) (updated 2026-08-31) | Removed | Rights in output depend on separate per-model terms (6.1) that were not read. Its red-teaming approval rule (7, 8) does not appear to cover ordinary coding requests. About 50 free requests a day was also too slow |
+| [CodeQL](https://github.com/github/codeql-cli-binaries/blob/main/LICENSE.md) | Removed | Allowed only for academic research or open-source codebases; neither clearly covers real model output. Earlier CodeQL results remain in git history |
+
+This is a project record, not legal advice.
 
 All test data is synthetic: users, emails and secrets are made up and use `.test` / `example.test` domains.

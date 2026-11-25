@@ -1,4 +1,4 @@
-"""The four benchmark models plus an offline scripted one.
+"""The two benchmark models plus an offline scripted one.
 
 Model IDs and free-tier limits are candidates until `python -m codetrust.llm.verify` has checked
 them against each provider (free models are renamed or removed often). Override an ID without
@@ -38,14 +38,6 @@ MODELS = {
     "gemini": ModelSpec(
         "gemini", "gemini", "gemini-2.5-flash-lite",
         {"rpm": 10, "tpm": 200_000, "rpd": 900, "tpd": 1_000_000},
-    ),
-    "mistral": ModelSpec(
-        "mistral", "mistral", "mistral-small-latest",
-        {"rpm": 25, "tpm": 100_000, "rpd": 5000, "tpd": 1_500_000},
-    ),
-    "openrouter": ModelSpec(
-        "openrouter", "openrouter", "meta-llama/llama-3.3-70b-instruct:free",
-        {"rpm": 15, "tpm": 60_000, "rpd": 45, "tpd": 200_000},
     ),
 }  # fmt: skip
 

@@ -14,9 +14,7 @@ def cohens_kappa(a: pd.Series, b: pd.Series) -> float:
     return float("nan") if expected == 1 else float((observed - expected) / (1 - expected))
 
 
-def agreement_table(
-    df: pd.DataFrame, signals=("semgrep_vuln", "codeql_vuln", "exploit_vuln")
-) -> pd.DataFrame:
+def agreement_table(df: pd.DataFrame, signals=("semgrep_vuln", "exploit_vuln")) -> pd.DataFrame:
     """Pairwise kappa and counts. exploit_vuln is only defined for functionally correct code."""
     rows = []
     for i, first in enumerate(signals):

@@ -4,7 +4,7 @@ SEED = 1234
 TEMPERATURE = 0.2
 N_TASKS = 50
 N_PARAPHRASES = 10
-N_MODELS = 4
+N_MODELS = 2
 
 CWE_FAMILIES = {
     "sql_injection": "CWE-89",
@@ -22,8 +22,6 @@ CWE_FAMILIES = {
 PROVIDER_KEY_VARS = {
     "groq": "CODETRUST_GROQ_API_KEY",
     "gemini": "CODETRUST_GEMINI_API_KEY",
-    "mistral": "CODETRUST_MISTRAL_API_KEY",
-    "openrouter": "CODETRUST_OPENROUTER_API_KEY",
 }
 
 # Which scanner CWE ids count as "in scope" for each task family (the family's own weakness and

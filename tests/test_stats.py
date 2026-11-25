@@ -107,11 +107,13 @@ def test_agreement_table_ignores_undefined_rows():
     df = pd.DataFrame(
         {
             "semgrep_vuln": [True, True, False, False],
-            "codeql_vuln": [True, False, False, False],
+            "other_vuln": [True, False, False, False],
             "exploit_vuln": [True, None, False, None],
         }
     )
-    table = agreement_table(df).set_index(["signal_a", "signal_b"])
+    table = agreement_table(df, ("semgrep_vuln", "other_vuln", "exploit_vuln")).set_index(
+        ["signal_a", "signal_b"]
+    )
     row = table.loc[("semgrep_vuln", "exploit_vuln")]
     assert row["n"] == 2 and row["both"] == 1 and row["neither"] == 1
-    assert table.loc[("semgrep_vuln", "codeql_vuln"), "only_a"] == 1
+    assert table.loc[("semgrep_vuln", "other_vuln"), "only_a"] == 1

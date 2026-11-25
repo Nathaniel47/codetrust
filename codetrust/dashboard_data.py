@@ -11,7 +11,7 @@ from codetrust.stats.variance import axis_effects, summary_with_ci, wording_spre
 
 SCORES = RESULTS_DIR / "scores.csv"
 BOOL_COLUMNS = [
-    "functional_pass", "exploit_vuln", "semgrep_vuln", "codeql_vuln", "scanner_vuln",
+    "functional_pass", "exploit_vuln", "semgrep_vuln", "scanner_vuln",
     "other_high_finding", "vulnerable", "secure_and_correct",
 ]  # fmt: skip
 OUTCOMES = {

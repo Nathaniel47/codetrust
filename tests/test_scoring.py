@@ -2,7 +2,7 @@ import json
 
 import pandas as pd
 
-from codetrust.scan.normalise import codeql_findings, cwe_numbers, is_high, semgrep_findings
+from codetrust.scan.normalise import cwe_numbers, semgrep_findings
 from codetrust.score.run import update_scores
 from codetrust.score.scorer import (
     in_family,
@@ -30,7 +30,7 @@ def make_tests(correct=OK, security=OK):
     return {"ran": True, "correct": correct, "security": security}
 
 
-def test_cwe_numbers_from_both_scanners_formats():
+def test_cwe_numbers_from_different_formats():
     assert cwe_numbers(["CWE-89: SQL Injection"]) == [89]
     assert cwe_numbers(["external/cwe/cwe-089", "security", "external/cwe/cwe-564"]) == [89, 564]
     assert cwe_numbers(None) == []
@@ -53,32 +53,11 @@ def test_semgrep_json_is_normalised():
     ]  # fmt: skip
 
 
-def test_sarif_is_normalised_with_severity_from_score():
-    sarif = {
-        "runs": [
-            {
-                "tool": {"driver": {"rules": [
-                    {"id": "py/sql-injection",
-                     "properties": {"tags": ["external/cwe/cwe-089"], "security-severity": "8.8"}}
-                ]}},
-                "results": [{
-                    "ruleId": "py/sql-injection",
-                    "locations": [{"physicalLocation": {
-                        "artifactLocation": {"uri": "a.py"}, "region": {"startLine": 3}}}],
-                }],
-            }
-        ]
-    }  # fmt: skip
-    (f,) = codeql_findings(sarif)
-    assert (f["cwe"], f["severity"], f["file"], f["line"]) == ([89], "high", "a.py", 3)
-    assert is_high(f)
-
-
 def test_family_scope_decides_what_counts():
     assert in_family([finding(cwe=(89,))], "sql_injection")
     assert not in_family([finding(cwe=(79,))], "sql_injection")
-    assert in_family([finding("codeql")], "sql_injection", "codeql")
-    assert not in_family([finding("codeql")], "sql_injection", "semgrep")
+    assert in_family([finding()], "sql_injection", "semgrep")
+    assert not in_family([finding("other")], "sql_injection", "semgrep")
 
 
 def test_outcome_passes_needs_at_least_one_passing_test_and_no_trouble():
@@ -102,8 +81,8 @@ def test_failed_security_test_means_exploitable():
 
 
 def test_scanner_finding_alone_makes_it_vulnerable():
-    row = score_record(RECORD, make_tests(), [finding("codeql")])
-    assert row["codeql_vuln"] and not row["semgrep_vuln"] and row["scanner_vuln"]
+    row = score_record(RECORD, make_tests(), [finding()])
+    assert row["semgrep_vuln"] and row["scanner_vuln"] and row["exploit_vuln"] is False
     assert row["vulnerable"] and not row["secure_and_correct"]
 
 
@@ -146,3 +125,12 @@ def test_update_scores_replaces_only_that_models_rows(tmp_path):
     assert sorted(frame["model_tag"]) == ["a", "b"]
     assert not frame[frame.model_tag == "a"].secure_and_correct.iloc[0]
     assert isinstance(pd.read_csv(path), pd.DataFrame)
+
+
+def test_update_scores_drops_columns_that_are_no_longer_scored(tmp_path):
+    path = tmp_path / "scores.csv"
+    row = score_record({**RECORD, "model_tag": "a"}, make_tests(), [])
+    pd.DataFrame([{**row, "retired_signal": True}]).to_csv(path, index=False)
+    frame = update_scores([row], "a", path)
+    assert "retired_signal" not in frame.columns
+    assert "retired_signal" not in pd.read_csv(path).columns

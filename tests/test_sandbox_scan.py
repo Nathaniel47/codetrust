@@ -54,9 +54,6 @@ def test_scanner_containers_have_no_network_and_read_only_code(tmp_path):
     semgrep = " ".join(scan_runner.semgrep_command(tmp_path))
     assert "--network none" in semgrep and f"{tmp_path}:/src:ro" in semgrep
     assert "SEMGREP_SEND_METRICS=off" in semgrep
-    codeql = " ".join(scan_runner.codeql_command(tmp_path))
-    assert "--network none" in codeql and f"{tmp_path}:/src:ro" in codeql
-    assert "--tmpfs /work" in codeql
 
 
 def test_scanner_versions_takes_the_last_output_line_without_network(monkeypatch):
@@ -67,7 +64,7 @@ def test_scanner_versions_takes_the_last_output_line_without_network(monkeypatch
         return scan_runner.subprocess.CompletedProcess(command, 0, stdout="notice\n1.2.3\n")
 
     monkeypatch.setattr(scan_runner.subprocess, "run", fake_run)
-    assert scan_runner.scanner_versions() == {"semgrep": "1.2.3", "codeql": "1.2.3"}
+    assert scan_runner.scanner_versions() == {"semgrep": "1.2.3"}
     assert all("--network" in c and "none" in c for c in seen)
 
 
@@ -86,7 +83,6 @@ def test_scan_files_assigns_findings_to_files_and_keeps_clean_ones(tmp_path, mon
     hit = {"scanner": "semgrep", "file": "a.py", "rule": "r", "cwe": [89],
            "severity": "error", "line": 1}  # fmt: skip
     monkeypatch.setattr(scan_runner, "run_semgrep", lambda d: [hit])
-    monkeypatch.setattr(scan_runner, "run_codeql", lambda d: [])
     assert scan_runner.scan_files(tmp_path) == {"a": [hit], "b": []}
 
 
@@ -137,6 +133,6 @@ def test_real_semgrep_flags_the_vulnerable_sql_solution(tmp_path):
     code_dir.chmod(0o755)
     (code_dir / "vuln.py").write_text(task.read("vulnerable.py"), encoding="utf-8")
     (code_dir / "safe.py").write_text(task.read("reference.py"), encoding="utf-8")
-    result = scan_runner.scan_files(Path(code_dir), ("semgrep",))
+    result = scan_runner.scan_files(Path(code_dir))
     assert any(89 in f["cwe"] for f in result["vuln"])
     assert result["safe"] == []

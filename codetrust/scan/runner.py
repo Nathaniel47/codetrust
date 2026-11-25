@@ -1,6 +1,6 @@
-"""Run Semgrep and CodeQL in Docker over a folder of Python files.
+"""Run Semgrep in Docker over a folder of Python files.
 
-Both scanners only read the files. They run with no network, as a non-root user, with the code
+The scanner only reads the files. It runs with no network, as a non-root user, with the code
 mounted read-only. The folder holds one file per generation (named after its record).
 """
 
@@ -9,10 +9,9 @@ import subprocess
 from pathlib import Path
 
 from codetrust.paths import DATA_DIR
-from codetrust.scan.normalise import codeql_findings, semgrep_findings
+from codetrust.scan.normalise import semgrep_findings
 
 SEMGREP_IMAGE = "semgrep/semgrep:latest"
-CODEQL_IMAGE = "codetrust-codeql"
 RULES_DIR = DATA_DIR / "rules"
 
 LOCKDOWN = [
@@ -50,43 +49,16 @@ def run_semgrep(code_dir: Path, rules_dir: Path = RULES_DIR) -> list[dict]:
     return semgrep_findings(data)
 
 
-CODEQL_SUITE = "codeql/python-queries:codeql-suites/python-security-extended.qls"
-
-
-def codeql_command(code_dir: Path) -> list[str]:
-    """One container: build the database and analyse it in an in-memory /work (a Windows bind
-    mount made this about 10 times slower), then print the SARIF report on stdout."""
-    script = (
-        "codeql database create /work/db --language=python --source-root=/src --overwrite >&2 && "
-        f"codeql database analyze /work/db {CODEQL_SUITE} --format=sarif-latest "
-        "--output=/work/out.sarif --threads=2 --ram=3000 >&2 && cat /work/out.sarif"
-    )
-    return [
-        "docker", "run", *LOCKDOWN,
-        "--tmpfs", "/work:rw,exec,uid=1000,gid=1000,size=4g",
-        "-v", f"{code_dir}:/src:ro",
-        CODEQL_IMAGE, "sh", "-c", script,
-    ]  # fmt: skip
-
-
-def run_codeql(code_dir: Path) -> list[dict]:
-    proc = subprocess.run(codeql_command(code_dir), capture_output=True, text=True, timeout=7200)
-    if proc.returncode != 0 or not proc.stdout.strip():
-        raise RuntimeError(f"codeql failed: {proc.stderr[-800:]}")
-    return codeql_findings(json.loads(proc.stdout))
-
-
 VERSION_COMMANDS = {
     "semgrep": [SEMGREP_IMAGE, "semgrep", "--version"],
-    "codeql": [CODEQL_IMAGE, "codeql", "version", "--format=terse"],
 }
 
 
-def scanner_versions(scanners=("semgrep", "codeql")) -> dict[str, str]:
-    """The scanner images are not pinned, so record which versions produced a set of results."""
+def scanner_versions() -> dict[str, str]:
+    """The scanner image is not pinned, so record which version produced a set of results."""
     versions = {}
-    for name in scanners:
-        command = ["docker", "run", "--rm", "--network", "none", *VERSION_COMMANDS[name]]
+    for name, arguments in VERSION_COMMANDS.items():
+        command = ["docker", "run", "--rm", "--network", "none", *arguments]
         proc = subprocess.run(command, capture_output=True, text=True, timeout=300, check=True)
         versions[name] = proc.stdout.strip().splitlines()[-1]
     return versions
@@ -104,15 +76,10 @@ def export_code(records_dir: Path, code_dir: Path) -> int:
     return count
 
 
-def scan_files(code_dir: Path, scanners=("semgrep", "codeql")) -> dict[str, list[dict]]:
+def scan_files(code_dir: Path) -> dict[str, list[dict]]:
     """Return {file stem: [findings]} for every file in code_dir (empty list if clean)."""
     out: dict[str, list[dict]] = {p.stem: [] for p in code_dir.glob("*.py")}
-    findings: list[dict] = []
-    if "semgrep" in scanners:
-        findings += run_semgrep(code_dir)
-    if "codeql" in scanners:
-        findings += run_codeql(code_dir)
-    for finding in findings:
+    for finding in run_semgrep(code_dir):
         stem = finding["file"].removesuffix(".py")
         if stem in out:
             out[stem].append(finding)

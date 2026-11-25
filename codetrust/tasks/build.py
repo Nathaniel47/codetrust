@@ -10,7 +10,7 @@ import json
 import statistics
 from collections import Counter
 
-from codetrust.config import SEED
+from codetrust.config import N_MODELS, SEED
 from codetrust.paths import DATA_DIR, RESULTS_DIR
 from codetrust.tasks.loader import load_tasks
 from codetrust.tasks.paraphrase import AXES, build_paraphrases, check_paraphrases
@@ -38,7 +38,7 @@ def build_report(tasks, rows, split, validation) -> str:
         "",
         f"- Tasks: {len(tasks)} in {len(families)} vulnerability families",
         f"- Prompts: {len(rows)} ({len(AXES)} wordings per task)",
-        f"- Planned generations per model: {len(rows)}; with 4 models: {len(rows) * 4}",
+        f"- Planned generations: {len(rows)} per model, {len(rows) * N_MODELS} in total",
         f"- Split by task: {sum(v == 'dev' for v in split.values())} dev, "
         f"{sum(v == 'test' for v in split.values())} test",
         "",

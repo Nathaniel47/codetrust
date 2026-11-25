@@ -1,4 +1,4 @@
-"""HTTP backends for the four providers. Plain httpx, no vendor SDKs.
+"""HTTP backends for the two providers. Plain httpx, no vendor SDKs.
 
 Keys come only from CODETRUST_* environment variables and are sent in headers, never in URLs or
 error messages.
@@ -13,8 +13,6 @@ from codetrust.config import PROVIDER_KEY_VARS
 
 OPENAI_COMPATIBLE = {
     "groq": "https://api.groq.com/openai/v1",
-    "mistral": "https://api.mistral.ai/v1",
-    "openrouter": "https://openrouter.ai/api/v1",
 }
 GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta"
 

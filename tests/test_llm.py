@@ -93,7 +93,7 @@ def test_gemini_key_goes_in_header_not_url(monkeypatch):
 
 
 def test_rate_limit_is_retried_then_succeeds(monkeypatch):
-    monkeypatch.setenv("CODETRUST_MISTRAL_API_KEY", "k")
+    monkeypatch.setenv("CODETRUST_GROQ_API_KEY", "k")
     answers = iter([429, 429, 200])
     waits = []
 
@@ -102,7 +102,7 @@ def test_rate_limit_is_retried_then_succeeds(monkeypatch):
             return httpx.Response(429, headers={"retry-after": "3"})
         return httpx.Response(200, json={"choices": [{"message": {"content": "ok"}}]})
 
-    backend = make_backend("mistral", transport=mock(handler), sleep=waits.append)
+    backend = make_backend("groq", transport=mock(handler), sleep=waits.append)
     assert backend("m", [{"role": "user", "content": "q"}], None, None, 10)[0] == "ok"
     assert waits == [3.0, 3.0]
 
