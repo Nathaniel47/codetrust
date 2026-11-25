@@ -23,6 +23,18 @@
           "enum": ["insertions", "file"],
           "default": "insertions",
           "description": "insertions: scan only blocks that appear at once (accepted suggestions, pastes). file: rescan the whole file on every change."
+        },
+        "codetrust.useLocalSemgrep": {
+          "type": "boolean",
+          "default": false,
+          "scope": "machine",
+          "description": "Scan with the Semgrep installed on this computer, using the rules shipped with CodeTrust. If Semgrep cannot run, the built-in rules are used."
+        },
+        "codetrust.semgrepPath": {
+          "type": "string",
+          "default": "semgrep",
+          "scope": "machine",
+          "description": "The Semgrep program to run: a name on PATH or a full path. Only user (machine) settings can set this, so a project cannot choose which program runs."
         }
       }
     }
