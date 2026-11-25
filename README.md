@@ -89,7 +89,7 @@ Checked 2026-11-20.
 
 | Source | How it is used | Licence / terms |
 |---|---|---|
-| Tasks, paraphrases, tests (this repo) | Written for this project, no text copied from elsewhere | Code MIT; dataset CC BY 4.0 (proposed, to be confirmed before release) |
+| Tasks, paraphrases, tests (this repo) | Written for this project, no text copied from elsewhere | Code: MIT ([LICENSE](LICENSE)). Dataset (`data/tasks/`, `data/paraphrases.jsonl`, `data/splits.json`): [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), credit Nathaniel Ankomah Aidoo |
 | HumanEval (openai/human-eval) | Reference only, nothing copied | MIT |
 | SecurityEval (s2e-lab/SecurityEval) | Reference only, nothing copied | No licence declared on GitHub, so no content reused |
 | LLMSecEval (tuhh-softsec/LLMSecEval) | Reference only, nothing copied | No licence declared on GitHub, so no content reused |
