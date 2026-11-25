@@ -11,9 +11,10 @@ from pathlib import Path
 import pandas as pd
 
 from codetrust.generate.runner import GENERATED_DIR
+from codetrust.llm.meta import update_run_meta
 from codetrust.paths import RESULTS_DIR
 from codetrust.sandbox.runner import TEST_RESULTS_DIR, test_model
-from codetrust.scan.runner import export_code, scan_files
+from codetrust.scan.runner import export_code, scan_files, scanner_versions
 from codetrust.score.scorer import SCORE_COLUMNS, score_model
 
 SCAN_DIR = RESULTS_DIR / "scan"
@@ -47,9 +48,13 @@ def main(argv=None) -> None:
     parser.add_argument("--rescan", action="store_true")
     parser.add_argument("--scanners", default="semgrep,codeql")
     args = parser.parse_args(argv)
+    scanners = tuple(args.scanners.split(","))
+    update_run_meta(
+        scoring={"models": args.models.split(","), "scanners": scanner_versions(scanners)}
+    )
     for tag in args.models.split(","):
         tested = test_model(tag, GENERATED_DIR)
-        scan_file = scan_model(tag, tuple(args.scanners.split(",")), args.rescan)
+        scan_file = scan_model(tag, scanners, args.rescan)
         rows = score_model(tag, GENERATED_DIR, TEST_RESULTS_DIR / f"{tag}.jsonl", scan_file)
         update_scores(rows, tag)
         secure = sum(r["secure_and_correct"] for r in rows)

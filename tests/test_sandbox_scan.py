@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from codetrust.paths import ROOT
 from codetrust.sandbox import driver
 from codetrust.sandbox.runner import container_path, docker_command
 from codetrust.scan import runner as scan_runner
@@ -19,7 +20,10 @@ def test_sandbox_container_is_locked_down(tmp_path):
                  "--security-opt no-new-privileges", "--user 1000:1000"):  # fmt: skip
         assert flag in joined
     mounts = [cmd[i + 1] for i, a in enumerate(cmd) if a == "-v"]
-    assert len(mounts) == 3 and all(m.endswith(":ro") for m in mounts)
+    assert len(mounts) == 4 and all(m.endswith(":ro") for m in mounts)
+    inside = sorted(m.rsplit(":", 2)[1] for m in mounts)
+    assert inside == ["/in", "/list.txt", "/repo/codetrust", "/repo/data/tasks"]
+    assert not any(m.startswith(f"{ROOT}:") for m in mounts), "whole repo must not be mounted"
     assert "--privileged" not in joined
 
 
@@ -53,6 +57,18 @@ def test_scanner_containers_have_no_network_and_read_only_code(tmp_path):
     codeql = " ".join(scan_runner.codeql_command(tmp_path))
     assert "--network none" in codeql and f"{tmp_path}:/src:ro" in codeql
     assert "--tmpfs /work" in codeql
+
+
+def test_scanner_versions_takes_the_last_output_line_without_network(monkeypatch):
+    seen = []
+
+    def fake_run(command, **kwargs):
+        seen.append(command)
+        return scan_runner.subprocess.CompletedProcess(command, 0, stdout="notice\n1.2.3\n")
+
+    monkeypatch.setattr(scan_runner.subprocess, "run", fake_run)
+    assert scan_runner.scanner_versions() == {"semgrep": "1.2.3", "codeql": "1.2.3"}
+    assert all("--network" in c and "none" in c for c in seen)
 
 
 def test_export_code_writes_one_file_per_record_with_code(tmp_path):

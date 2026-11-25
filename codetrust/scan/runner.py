@@ -76,6 +76,22 @@ def run_codeql(code_dir: Path) -> list[dict]:
     return codeql_findings(json.loads(proc.stdout))
 
 
+VERSION_COMMANDS = {
+    "semgrep": [SEMGREP_IMAGE, "semgrep", "--version"],
+    "codeql": [CODEQL_IMAGE, "codeql", "version", "--format=terse"],
+}
+
+
+def scanner_versions(scanners=("semgrep", "codeql")) -> dict[str, str]:
+    """The scanner images are not pinned, so record which versions produced a set of results."""
+    versions = {}
+    for name in scanners:
+        command = ["docker", "run", "--rm", "--network", "none", *VERSION_COMMANDS[name]]
+        proc = subprocess.run(command, capture_output=True, text=True, timeout=300, check=True)
+        versions[name] = proc.stdout.strip().splitlines()[-1]
+    return versions
+
+
 def export_code(records_dir: Path, code_dir: Path) -> int:
     """Write each record's extracted code to <code_dir>/<record file stem>.py."""
     code_dir.mkdir(parents=True, exist_ok=True)

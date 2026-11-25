@@ -365,7 +365,18 @@
     "line": 5
    }
   ],
-  "ssrf_proxy_route__reference": [],
+  "ssrf_proxy_route__reference": [
+   {
+    "scanner": "codeql",
+    "file": "ssrf_proxy_route__reference.py",
+    "rule": "full-ssrf",
+    "cwe": [
+     918
+    ],
+    "severity": "high",
+    "line": 20
+   }
+  ],
   "ssrf_proxy_route__vulnerable": [
    {
     "scanner": "semgrep",
@@ -376,11 +387,32 @@
     ],
     "severity": "warning",
     "line": 10
+   },
+   {
+    "scanner": "codeql",
+    "file": "ssrf_proxy_route__vulnerable.py",
+    "rule": "full-ssrf",
+    "cwe": [
+     918
+    ],
+    "severity": "high",
+    "line": 10
    }
   ],
   "uu_allowed_file__reference": [],
   "uu_allowed_file__vulnerable": [],
-  "uu_checkout_return__reference": [],
+  "uu_checkout_return__reference": [
+   {
+    "scanner": "codeql",
+    "file": "uu_checkout_return__reference.py",
+    "rule": "url-redirection",
+    "cwe": [
+     601
+    ],
+    "severity": "medium",
+    "line": 23
+   }
+  ],
   "uu_checkout_return__vulnerable": [
    {
     "scanner": "semgrep",
@@ -391,9 +423,30 @@
     ],
     "severity": "error",
     "line": 9
+   },
+   {
+    "scanner": "codeql",
+    "file": "uu_checkout_return__vulnerable.py",
+    "rule": "url-redirection",
+    "cwe": [
+     601
+    ],
+    "severity": "medium",
+    "line": 9
    }
   ],
-  "uu_login_redirect__reference": [],
+  "uu_login_redirect__reference": [
+   {
+    "scanner": "codeql",
+    "file": "uu_login_redirect__reference.py",
+    "rule": "url-redirection",
+    "cwe": [
+     601
+    ],
+    "severity": "medium",
+    "line": 25
+   }
+  ],
   "uu_login_redirect__vulnerable": [
    {
     "scanner": "semgrep",
@@ -403,6 +456,16 @@
      601
     ],
     "severity": "error",
+    "line": 11
+   },
+   {
+    "scanner": "codeql",
+    "file": "uu_login_redirect__vulnerable.py",
+    "rule": "url-redirection",
+    "cwe": [
+     601
+    ],
+    "severity": "medium",
     "line": 11
    }
   ],
@@ -416,6 +479,16 @@
     ],
     "severity": "error",
     "line": 23
+   },
+   {
+    "scanner": "codeql",
+    "file": "uu_redirect_route__reference.py",
+    "rule": "url-redirection",
+    "cwe": [
+     601
+    ],
+    "severity": "medium",
+    "line": 23
    }
   ],
   "uu_redirect_route__vulnerable": [
@@ -427,6 +500,26 @@
      601
     ],
     "severity": "error",
+    "line": 11
+   },
+   {
+    "scanner": "codeql",
+    "file": "uu_redirect_route__vulnerable.py",
+    "rule": "incomplete-url-substring-sanitization",
+    "cwe": [
+     20
+    ],
+    "severity": "high",
+    "line": 10
+   },
+   {
+    "scanner": "codeql",
+    "file": "uu_redirect_route__vulnerable.py",
+    "rule": "url-redirection",
+    "cwe": [
+     601
+    ],
+    "severity": "medium",
     "line": 11
    }
   ],
@@ -440,6 +533,20 @@
      434
     ],
     "severity": "error",
+    "line": 14
+   },
+   {
+    "scanner": "codeql",
+    "file": "uu_upload_endpoint__vulnerable.py",
+    "rule": "path-injection",
+    "cwe": [
+     22,
+     23,
+     36,
+     73,
+     99
+    ],
+    "severity": "high",
     "line": 14
    }
   ],
@@ -464,6 +571,26 @@
     ],
     "severity": "error",
     "line": 13
+   },
+   {
+    "scanner": "codeql",
+    "file": "wc_encrypt__vulnerable.py",
+    "rule": "weak-cryptographic-algorithm",
+    "cwe": [
+     327
+    ],
+    "severity": "high",
+    "line": 9
+   },
+   {
+    "scanner": "codeql",
+    "file": "wc_encrypt__vulnerable.py",
+    "rule": "weak-cryptographic-algorithm",
+    "cwe": [
+     327
+    ],
+    "severity": "high",
+    "line": 14
    }
   ],
   "wc_otp__reference": [],
@@ -499,6 +626,30 @@
      327
     ],
     "severity": "warning",
+    "line": 9
+   },
+   {
+    "scanner": "codeql",
+    "file": "wc_password_hash__vulnerable.py",
+    "rule": "weak-sensitive-data-hashing",
+    "cwe": [
+     327,
+     328,
+     916
+    ],
+    "severity": "high",
+    "line": 5
+   },
+   {
+    "scanner": "codeql",
+    "file": "wc_password_hash__vulnerable.py",
+    "rule": "weak-sensitive-data-hashing",
+    "cwe": [
+     327,
+     328,
+     916
+    ],
+    "severity": "high",
     "line": 9
    }
   ],
@@ -657,6 +808,58 @@
     "caught": 4,
     "false_alarm": 2
    }
+  },
+  "codeql": {
+   "broken_access_control": {
+    "tasks": 5,
+    "caught": 0,
+    "false_alarm": 0
+   },
+   "command_injection": {
+    "tasks": 5,
+    "caught": 0,
+    "false_alarm": 0
+   },
+   "insecure_deserialization": {
+    "tasks": 5,
+    "caught": 0,
+    "false_alarm": 0
+   },
+   "hardcoded_secrets": {
+    "tasks": 5,
+    "caught": 0,
+    "false_alarm": 0
+   },
+   "path_traversal": {
+    "tasks": 5,
+    "caught": 0,
+    "false_alarm": 0
+   },
+   "sql_injection": {
+    "tasks": 5,
+    "caught": 0,
+    "false_alarm": 0
+   },
+   "ssrf": {
+    "tasks": 5,
+    "caught": 1,
+    "false_alarm": 1
+   },
+   "unsafe_upload_redirect": {
+    "tasks": 5,
+    "caught": 3,
+    "false_alarm": 3
+   },
+   "weak_crypto": {
+    "tasks": 5,
+    "caught": 2,
+    "false_alarm": 0
+   },
+   "xss": {
+    "tasks": 5,
+    "caught": 0,
+    "false_alarm": 0
+   }
   }
  },
  "detail": [
@@ -664,301 +867,401 @@
    "task": "ac_admin_stats",
    "family": "broken_access_control",
    "semgrep_caught": false,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ac_delete_user",
    "family": "broken_access_control",
    "semgrep_caught": false,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ac_get_order",
    "family": "broken_access_control",
    "semgrep_caught": false,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ac_list_invoices",
    "family": "broken_access_control",
    "semgrep_caught": false,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ac_update_profile",
    "family": "broken_access_control",
    "semgrep_caught": false,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ci_convert_image",
    "family": "command_injection",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ci_dns_lookup",
    "family": "command_injection",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ci_git_log",
    "family": "command_injection",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ci_gzip_file",
    "family": "command_injection",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ci_ping_host",
    "family": "command_injection",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "des_cache_file",
    "family": "insecure_deserialization",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "des_cart_cookie",
    "family": "insecure_deserialization",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "des_config",
    "family": "insecure_deserialization",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "des_session",
    "family": "insecure_deserialization",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "des_worker_message",
    "family": "insecure_deserialization",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "hc_api_headers",
    "family": "hardcoded_secrets",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "hc_db_config",
    "family": "hardcoded_secrets",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "hc_flask_secret",
    "family": "hardcoded_secrets",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "hc_token_signing",
    "family": "hardcoded_secrets",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "hc_webhook_signature",
    "family": "hardcoded_secrets",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "pt_extract_zip",
    "family": "path_traversal",
    "semgrep_caught": false,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "pt_list_dir",
    "family": "path_traversal",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "pt_read_file",
    "family": "path_traversal",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "pt_save_note",
    "family": "path_traversal",
    "semgrep_caught": false,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "pt_static_route",
    "family": "path_traversal",
    "semgrep_caught": false,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "sqli_delete_comment",
    "family": "sql_injection",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "sqli_find_user",
    "family": "sql_injection",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "sqli_get_orders",
    "family": "sql_injection",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "sqli_search_products",
    "family": "sql_injection",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "sqli_sorted_items",
    "family": "sql_injection",
    "semgrep_caught": true,
-   "semgrep_false_alarm": true
+   "semgrep_false_alarm": true,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ssrf_check_webhook",
    "family": "ssrf",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ssrf_image_size",
    "family": "ssrf",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ssrf_import_feed",
    "family": "ssrf",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ssrf_preview",
    "family": "ssrf",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "ssrf_proxy_route",
    "family": "ssrf",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": true,
+   "codeql_false_alarm": true
   },
   {
    "task": "uu_allowed_file",
    "family": "unsafe_upload_redirect",
    "semgrep_caught": false,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "uu_checkout_return",
    "family": "unsafe_upload_redirect",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": true,
+   "codeql_false_alarm": true
   },
   {
    "task": "uu_login_redirect",
    "family": "unsafe_upload_redirect",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": true,
+   "codeql_false_alarm": true
   },
   {
    "task": "uu_redirect_route",
    "family": "unsafe_upload_redirect",
    "semgrep_caught": true,
-   "semgrep_false_alarm": true
+   "semgrep_false_alarm": true,
+   "codeql_caught": true,
+   "codeql_false_alarm": true
   },
   {
    "task": "uu_upload_endpoint",
    "family": "unsafe_upload_redirect",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "wc_encrypt",
    "family": "weak_crypto",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": true,
+   "codeql_false_alarm": false
   },
   {
    "task": "wc_otp",
    "family": "weak_crypto",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "wc_password_hash",
    "family": "weak_crypto",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": true,
+   "codeql_false_alarm": false
   },
   {
    "task": "wc_reset_token",
    "family": "weak_crypto",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "wc_sign_message",
    "family": "weak_crypto",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "xss_comments",
    "family": "xss",
    "semgrep_caught": true,
-   "semgrep_false_alarm": true
+   "semgrep_false_alarm": true,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "xss_flask_hello",
    "family": "xss",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "xss_greeting",
    "family": "xss",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "xss_profile_card",
    "family": "xss",
    "semgrep_caught": false,
-   "semgrep_false_alarm": true
+   "semgrep_false_alarm": true,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   },
   {
    "task": "xss_search_page",
    "family": "xss",
    "semgrep_caught": true,
-   "semgrep_false_alarm": false
+   "semgrep_false_alarm": false,
+   "codeql_caught": false,
+   "codeql_false_alarm": false
   }
  ]
 }

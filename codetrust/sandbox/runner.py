@@ -1,7 +1,8 @@
 """Host side of the sandbox: start locked-down containers that test generated code.
 
-Generated code never runs on the host. Each container gets the repo and the records read-only, no
-network, a read-only root, a small tmpfs for scratch files, no capabilities and resource limits.
+Generated code never runs on the host. Each container gets the package, the tasks and the records
+read-only, no network, a read-only root, a small tmpfs for scratch files, no capabilities and
+resource limits.
 """
 
 import json
@@ -28,7 +29,9 @@ def docker_command(records_dir: Path, list_file: Path, image: str = IMAGE) -> li
         "--pids-limit", "256",
         "--cpus", "1",
         "--user", "1000:1000",
-        "-v", f"{ROOT}:/repo:ro",
+        # Only what the driver needs: mounting the whole repo would show generated code a .env.
+        "-v", f"{ROOT / 'codetrust'}:/repo/codetrust:ro",
+        "-v", f"{ROOT / 'data' / 'tasks'}:/repo/data/tasks:ro",
         "-v", f"{records_dir.resolve()}:/in:ro",
         "-v", f"{list_file.resolve()}:/list.txt:ro",
         image,

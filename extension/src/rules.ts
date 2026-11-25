@@ -1,9 +1,9 @@
 // Pattern rules for risky Python code. Pure functions: no VS Code API here, so they run in Node
 // tests and in the evaluation script.
 //
-// The rules were written by reading the 20 development tasks (their vulnerable and safe
-// solutions) and the findings Semgrep and CodeQL gave on them. The 30 test tasks were not used to
-// choose or tune them; see results/extension_eval.md for how they score there.
+// The rules were written for the weaknesses in the 20 development tasks. Two later changes
+// (joining multi-line statements and a broader HTML rule) were made after seeing misses on the 30
+// test tasks, so see the caveats in results/extension_eval.md before quoting the test scores.
 
 export type Severity = "error" | "warning" | "info";
 

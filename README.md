@@ -2,7 +2,7 @@
 
 A benchmark plus VS Code extension that measures how secure and correct LLM-generated web-app code is, and how much that changes when the same request is worded differently.
 
-**Status:** setup stage (Step 2 of 8). See [PLAN.md](PLAN.md) for the design and [BUILD_STEPS.md](BUILD_STEPS.md) for progress. Demo link, results and architecture diagram are added in Step 8.
+**Status:** features built (Step 5 of 8). No real model has been benchmarked yet; results so far come from an offline scripted test model. See [PLAN.md](PLAN.md) for the design and [BUILD_STEPS.md](BUILD_STEPS.md) for progress. Demo link, results and architecture diagram are added in Step 8.
 
 ## Run locally
 
@@ -96,6 +96,8 @@ Checked 2026-11-20.
 | CyberSecEval (meta-llama/PurpleLlama) | Reference only, nothing copied | Mixed licences across the repo, not used |
 | Test dependencies: Flask, requests, PyYAML, cryptography | Imported by tests and by reference solutions | BSD-3 / Apache-2.0 / MIT / Apache-2.0 or BSD |
 
-Still to check before use: Semgrep rule licence and CodeQL terms (Step 5), and each model provider's terms on publishing generated code (Step 4).
+Scanners (checked 2026-11-25): the Semgrep rules in `data/rules/` are our own, so no registry rules are used or shipped. The [CodeQL terms](https://github.com/github/codeql-cli-binaries/blob/main/LICENSE.md) allow academic research and analysis of OSI-licensed codebases, not general automated analysis, so CI never runs CodeQL. What has been scanned so far comes from this MIT repo; which permission covers real model output is still to be decided.
+
+Still to check before use: each model provider's terms on publishing generated code.
 
 All test data is synthetic: users, emails and secrets are made up and use `.test` / `example.test` domains.

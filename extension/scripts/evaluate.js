@@ -103,8 +103,11 @@ const lines = [
   ...(falseAlarms.length ? falseAlarms.map((m) => `- ${m}`) : ["None."]),
   "",
   "Caveats: one person wrote both the tasks and the rules, so the dev/test split limits but does",
-  "not remove tuning to the benchmark. Pattern matching sees one line at a time and cannot follow",
-  "data flow or detect missing checks (access control), so those families are expected misses.",
+  "not remove tuning to the benchmark. Joining multi-line statements and broadening the HTML rule",
+  "were done after seeing misses on the test tasks, so the test numbers are optimistic. Pattern",
+  "matching sees one statement at a time and cannot follow data flow or detect missing checks",
+  "(access control), so those families are expected misses.",
+  "Generations from `scripted*` models are copies of the task solutions, not real model output.",
   "",
 ];
 fs.mkdirSync(path.join(root, "results"), { recursive: true });
