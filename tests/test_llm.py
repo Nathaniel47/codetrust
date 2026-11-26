@@ -107,6 +107,31 @@ def test_rate_limit_is_retried_then_succeeds(monkeypatch):
     assert waits == [3.0, 3.0]
 
 
+def test_dropped_connection_is_retried_then_reported_without_a_traceback(monkeypatch):
+    monkeypatch.setenv("CODETRUST_GROQ_API_KEY", "k")
+    calls = []
+
+    def flaky(request):
+        calls.append(1)
+        if len(calls) < 3:
+            raise httpx.ConnectError("getaddrinfo failed")
+        return httpx.Response(200, json={"choices": [{"message": {"content": "ok"}}]})
+
+    waits = []
+    backend = make_backend("groq", transport=mock(flaky), sleep=waits.append)
+    assert backend("m", [{"role": "user", "content": "q"}], None, None, 10)[0] == "ok"
+    assert waits == [5, 10]
+
+    def offline(request):
+        raise httpx.ConnectError("getaddrinfo failed")
+
+    waits.clear()
+    backend = make_backend("groq", transport=mock(offline), sleep=waits.append)
+    with pytest.raises(ProviderError, match="network error"):
+        backend("m", [{"role": "user", "content": "q"}], None, None, 10)
+    assert waits == [5, 10, 20, 40, 60]
+
+
 def test_errors_do_not_leak_the_key_and_missing_key_is_explained(monkeypatch):
     monkeypatch.delenv("CODETRUST_GROQ_API_KEY", raising=False)
     backend = make_backend("groq", transport=mock(lambda r: httpx.Response(401, text="bad key")))

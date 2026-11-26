@@ -32,7 +32,15 @@ def api_key(provider: str) -> str:
 def _post(url, headers, payload, transport, sleep, retries=6) -> dict:
     with httpx.Client(transport=transport, timeout=120) as http:
         for attempt in range(retries):
-            resp = http.post(url, headers=headers, json=payload)
+            try:
+                resp = http.post(url, headers=headers, json=payload)
+            except httpx.TransportError as exc:
+                if attempt == retries - 1:
+                    raise ProviderError(
+                        f"network error ({type(exc).__name__}); resume later (answers are cached)"
+                    ) from exc
+                sleep(min(60, 5 * 2**attempt))
+                continue
             if resp.status_code == 429 or resp.status_code >= 500:
                 wait = resp.headers.get("retry-after", "")
                 sleep(min(90, float(wait)) if wait.isdigit() else min(60, 5 * 2**attempt))
