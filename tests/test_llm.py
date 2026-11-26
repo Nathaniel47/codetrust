@@ -107,6 +107,21 @@ def test_rate_limit_is_retried_then_succeeds(monkeypatch):
     assert waits == [3.0, 3.0]
 
 
+def test_rate_limit_wait_is_logged_without_the_account_id(monkeypatch, caplog):
+    monkeypatch.setenv("CODETRUST_GROQ_API_KEY", "secret-123")
+    answers = iter([429, 200])
+
+    def handler(request):
+        if next(answers) == 429:
+            return httpx.Response(429, text="tokens per minute, organization org_abc123")
+        return httpx.Response(200, json={"choices": [{"message": {"content": "ok"}}]})
+
+    backend = make_backend("groq", transport=mock(handler), sleep=lambda s: None)
+    backend("m", [{"role": "user", "content": "q"}], None, None, 10)
+    assert "tokens per minute" in caplog.text and "org_<hidden>" in caplog.text
+    assert "org_abc123" not in caplog.text and "secret-123" not in caplog.text
+
+
 def test_dropped_connection_is_retried_then_reported_without_a_traceback(monkeypatch):
     monkeypatch.setenv("CODETRUST_GROQ_API_KEY", "k")
     calls = []

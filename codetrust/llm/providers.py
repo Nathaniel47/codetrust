@@ -4,12 +4,16 @@ Keys come only from CODETRUST_* environment variables and are sent in headers, n
 error messages.
 """
 
+import logging
 import os
+import re
 import time
 
 import httpx
 
 from codetrust.config import PROVIDER_KEY_VARS
+
+log = logging.getLogger(__name__)
 
 OPENAI_COMPATIBLE = {
     "groq": "https://api.groq.com/openai/v1",
@@ -43,7 +47,11 @@ def _post(url, headers, payload, transport, sleep, retries=6) -> dict:
                 continue
             if resp.status_code == 429 or resp.status_code >= 500:
                 wait = resp.headers.get("retry-after", "")
-                sleep(min(90, float(wait)) if wait.isdigit() else min(60, 5 * 2**attempt))
+                seconds = min(90, float(wait)) if wait.isdigit() else min(60, 5 * 2**attempt)
+                # The body names which limit was hit; Groq also puts the account's ID in it.
+                reason = re.sub(r"org_\w+", "org_<hidden>", resp.text[:300])
+                log.warning("HTTP %s, waiting %.0fs: %s", resp.status_code, seconds, reason)
+                sleep(seconds)
                 continue
             if resp.status_code != 200:
                 raise ProviderError(f"HTTP {resp.status_code}: {resp.text[:200]}")
