@@ -119,3 +119,21 @@ How to check: `cd extension && npm install && npm test`, then `npm run evaluate`
 
 Output goes to `results/evaluation/`. With only scripted models it goes to `results/evaluation_dryrun/`, stamped DRY RUN: those numbers test the code, not any model (the scripted model's repeats are identical by design, so its noise is zero).
 
+### Pilot (2026-11-26): why you run a small one first
+
+50 requests (5 tasks x 10 wordings) on Groq `openai/gpt-oss-20b`. All 50 replies gave usable code, at about 426 tokens each. Reading the code behind surprising scores showed:
+
+- **Two faults in my scorer.** (1) A model that checked `shutil.which("convert")` before running the command was marked broken, because the test faked the command but not the check. (2) A model that checked the input file exists was marked broken, because the test passed a file that did not exist. The command-injection tests now fake the program lookup and use real temporary files.
+- **One bad Semgrep rule.** `os.getenv("API_TOKEN", "")` was reported as a hard-coded secret. An empty default holds no secret, so the rule now skips it. All 4 Semgrep findings in the pilot were this false alarm.
+- **Effect of the fixes** on the same 50 replies: correct went from 48 to 50, secure and correct from 27 to 33. Scores on the known safe and flawed solutions did not change.
+- **Two real flaws confirmed by reading the code:** an admin page with a comment saying a role check belongs there, and no check; and a zip extractor with a comment saying it keeps files inside the folder, and no code that does. Comments that describe a protection are not the protection.
+
+These fixes were made after seeing pilot output, some of it from held-out tasks, and before the main run. Test and rule changes after the main run starts would need every affected result to be recomputed.
+
+**A limitation that remains:** the injection test passes file names that do not exist, so code that checks existence first never reaches its command and counts as safe, even if it would use a shell for a real file with a hostile name.
+
+**Settings:** reasoning effort `low` (reasoning tokens count against the daily limit); recorded in `run_meta.json`. Results describe this model at this setting only. Free limits (2026-11-26): 30 requests and 8,000 tokens a minute, 1,000 requests and 200,000 tokens a day, shared by everything in the same Groq organisation.
+
+**Reading the key without restarting an app** (PowerShell, nothing printed):
+`$env:CODETRUST_GROQ_API_KEY = [Environment]::GetEnvironmentVariable('CODETRUST_GROQ_API_KEY','User')`
+

@@ -318,7 +318,11 @@ def limitations(
         noise_text,
         "**Many comparisons.** With nine wordings per model some 95% intervals will exclude zero "
         "by chance; trust only effects marked as surviving the correction.",
-        "**One author** wrote the tasks, tests and Semgrep rules, so their blind spots coincide.",
+        "**One author** wrote the tasks, tests and Semgrep rules, so their blind spots coincide. "
+        "Two test faults and one rule fault were fixed after reading pilot output, before the main "
+        "run.",
+        "**Existence checks can hide a flaw.** The injection tests use file names that do not "
+        "exist, so code that checks existence first never runs its command and counts as safe.",
         "**Moving targets.** Seeds are best effort at the providers, free models are renamed or "
         "updated, and the Semgrep image is not pinned. Versions are recorded in run_meta.json and "
         "raw answers are cached locally.",

@@ -27,7 +27,7 @@ def verify(tags: list[str]) -> dict:
             available = list_model_ids(spec.provider)
             entry["listed"] = spec.model_id in available
             entry["similar"] = [m for m in available if spec.model_id.split("/")[-1][:8] in m][:8]
-            client = make_client(tag, max_tokens=20, use_budget=False)
+            client = make_client(tag, max_tokens=300, use_budget=False)
             reply = client.complete("Reply with the single word OK.")
             entry["status"] = "ok" if reply.strip() else "empty reply"
         except Exception as exc:  # report every failure kind instead of stopping

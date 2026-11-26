@@ -122,3 +122,32 @@ def test_list_model_ids(monkeypatch):
     monkeypatch.setenv("CODETRUST_GROQ_API_KEY", "k")
     transport = mock(lambda r: httpx.Response(200, json={"data": [{"id": "a"}, {"id": "b"}]}))
     assert list_model_ids("groq", transport) == ["a", "b"]
+
+
+def test_model_params_are_sent_and_change_the_cache_key(tmp_path, monkeypatch):
+    monkeypatch.setenv("CODETRUST_GROQ_API_KEY", "k")
+    bodies = []
+
+    def handler(request):
+        bodies.append(json.loads(request.content))
+        return httpx.Response(200, json={"choices": [{"message": {"content": "ok"}}]})
+
+    for effort in ("low", "high", "low"):
+        params = {"reasoning_effort": effort}
+        backend = make_backend("groq", transport=mock(handler), params=params)
+        client = LLMClient(
+            backend, "groq", "m", 0.2, 1, 50, cache=ResponseCache(tmp_path), params=params
+        )
+        client.complete("same prompt")
+    assert [b["reasoning_effort"] for b in bodies] == ["low", "high"]  # third came from cache
+
+
+def test_the_groq_model_is_configured_with_low_reasoning_effort(monkeypatch, tmp_path):
+    from codetrust.llm.models import MODEL_PARAMS, MODELS, make_client
+
+    monkeypatch.delenv("CODETRUST_MODEL_GROQ", raising=False)
+    client = make_client("groq", use_budget=False)
+    assert client.model == MODELS["groq"].default_id == "openai/gpt-oss-20b"
+    assert client.params == MODEL_PARAMS[client.model] == {"reasoning_effort": "low"}
+    monkeypatch.setenv("CODETRUST_MODEL_GROQ", "some/other-model")
+    assert make_client("groq", use_budget=False).params == {}

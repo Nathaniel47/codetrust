@@ -43,11 +43,12 @@ def _post(url, headers, payload, transport, sleep, retries=6) -> dict:
     raise ProviderError("provider keeps answering 429/5xx; resume later (answers are cached)")
 
 
-def openai_compatible_backend(provider: str, transport=None, sleep=time.sleep):
+def openai_compatible_backend(provider: str, transport=None, sleep=time.sleep, params=None):
     base = OPENAI_COMPATIBLE[provider]
 
     def backend(model, messages, temperature, seed, max_tokens):
         payload = {"model": model, "messages": messages, "max_tokens": max_tokens}
+        payload.update(params or {})
         if temperature is not None:
             payload["temperature"] = temperature
         if seed is not None:
@@ -88,11 +89,11 @@ def gemini_backend(transport=None, sleep=time.sleep):
     return backend
 
 
-def make_backend(provider: str, transport=None, sleep=time.sleep):
+def make_backend(provider: str, transport=None, sleep=time.sleep, params=None):
     if provider == "gemini":
         return gemini_backend(transport, sleep)
     if provider in OPENAI_COMPATIBLE:
-        return openai_compatible_backend(provider, transport, sleep)
+        return openai_compatible_backend(provider, transport, sleep, params)
     raise ValueError(f"unknown provider {provider}")
 
 

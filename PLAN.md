@@ -5,6 +5,8 @@ Budget: 7 weeks of evenings and weekends, free compute (laptop, phone), free API
 
 **Change, 2026-11-25 (owner's decision):** CodeQL, Mistral and OpenRouter were removed because their terms need a permission or condition we have not got (see the README's licence section). The benchmark now uses Semgrep and two model providers. BUILD_STEPS.md still quotes the original prompts; this plan wins.
 
+**Change, 2026-11-26 (owner's decision):** the benchmark runs on **one model**, Groq `openai/gpt-oss-20b` with low reasoning effort (only a Groq key is available; the planned Llama model is not offered to the account). Wherever this plan says two models, four models or comparing models, read one model: wording, noise, reminder and per-weakness results still apply, model comparison does not. Volume: about 1,150 generations, roughly 490K tokens, about 3 days at the free limit of 200K tokens a day.
+
 ## Scope
 
 | Area | Decision |

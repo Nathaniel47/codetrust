@@ -9,6 +9,7 @@ import http.server
 import importlib.util
 import ipaddress
 import os
+import shutil
 import socket
 import sqlite3
 import subprocess
@@ -154,7 +155,7 @@ class _FakePipe:
 class Recorder:
     """Replaces every way of starting a command and records what the code tried to run."""
 
-    LAUNCHERS = {"sh", "bash", "/bin/sh", "/bin/bash", "cmd", "cmd.exe", "powershell", "zsh"}
+    LAUNCHERS = {"sh", "bash", "cmd", "cmd.exe", "powershell", "zsh"}
 
     def __init__(self, monkeypatch):
         self.calls: list[tuple[str, object, bool]] = []
@@ -196,6 +197,8 @@ class Recorder:
             return (0, OUT)
 
         mp = monkeypatch
+        # Code may look the program up first; the sandbox does not have ImageMagick and friends.
+        mp.setattr(shutil, "which", lambda name, *a, **k: f"/usr/bin/{name}")
         mp.setattr(subprocess, "run", run)
         mp.setattr(subprocess, "check_output", check_output)
         mp.setattr(subprocess, "call", call)
@@ -224,7 +227,7 @@ class Recorder:
                 bad.append((kind, flat))
             elif (
                 args
-                and str(args[0]) in self.LAUNCHERS
+                and str(args[0]).rsplit("/", 1)[-1] in self.LAUNCHERS
                 and any(str(x) in ("-c", "/c", "/C") for x in args)
             ):
                 bad.append((kind, flat))

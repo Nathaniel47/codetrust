@@ -15,12 +15,12 @@ def cache_key(
     seed: int | None,
     repeat: int = 0,
     max_tokens: int | None = None,
+    params: dict | None = None,
 ) -> str:
-    payload = json.dumps(
-        [provider, model, messages, temperature, seed, repeat, max_tokens],
-        sort_keys=True,
-        ensure_ascii=False,
-    )
+    parts = [provider, model, messages, temperature, seed, repeat, max_tokens]
+    if params:  # only added when set, so keys made without extra settings stay the same
+        parts.append(params)
+    payload = json.dumps(parts, sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(payload.encode()).hexdigest()
 
 

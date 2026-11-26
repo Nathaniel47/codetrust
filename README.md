@@ -2,7 +2,7 @@
 
 A benchmark plus VS Code extension that measures how secure and correct LLM-generated web-app code is, and how much that changes when the same request is worded differently.
 
-**Status:** features and evaluation code built (Step 6 of 8 in progress). No real model has been benchmarked yet; results so far come from an offline scripted test model. See [PLAN.md](PLAN.md) for the design and [BUILD_STEPS.md](BUILD_STEPS.md) for progress. Demo link, results and architecture diagram are added in Step 8.
+**Status:** features and evaluation code built (Step 6 of 8 in progress). A 50-request pilot on `openai/gpt-oss-20b` has run; the full experiments have not, so there are no results to report yet. See [PLAN.md](PLAN.md) for the design and [BUILD_STEPS.md](BUILD_STEPS.md) for progress. Demo link, results and architecture diagram are added in Step 8.
 
 ## Run locally
 
@@ -109,8 +109,9 @@ Checked 2026-11-20.
 | Service | Status | Why |
 |---|---|---|
 | Semgrep | Used | The rules in `data/rules/` are our own; no registry rules are used or shipped |
-| [Groq](https://console.groq.com/docs/legal/services-agreement) (last modified 2026-06-22) | Used | Customer keeps the rights in output (8.1). No publicity or pre-approval clause found for publishing output. Generated code may carry third-party licences (4.3). **Not read:** the per-model terms (4.1) and use policy |
-| [Gemini API](https://ai.google.dev/gemini-api/terms) (effective 2026-03-23) | Used | Google does not claim the output. No pre-approval clause found. On the unpaid tier Google uses prompts and output to improve its products and people may review them (our prompts are synthetic). **Not read:** the general Google APIs terms and use policy |
+| [Groq](https://console.groq.com/docs/legal/services-agreement) (last modified 2026-06-22) | Used | Customer keeps the rights in output (8.1). No publicity or pre-approval clause found for publishing output. Generated code may carry third-party licences (4.3). The use policy and this model's licence were read on 2026-11-26 (next row) |
+| [gpt-oss-20b](https://huggingface.co/openai/gpt-oss-20b/blob/main/LICENSE) on Groq (read 2026-11-26) | **The benchmark model** | Weights are Apache-2.0; OpenAI's usage policy asks only for compliance with the law; Groq's [use policy](https://console.groq.com/docs/legal/ai-policy) (effective 2025-10-15) has no approval step for ordinary code generation and forbids going past rate limits, for example with extra accounts |
+| [Gemini API](https://ai.google.dev/gemini-api/terms) (effective 2026-03-23) | Supported, not used (no key) | Google does not claim the output. No pre-approval clause found. On the unpaid tier Google uses prompts and output to improve its products and people may review them (our prompts are synthetic). **Not read:** the general Google APIs terms and use policy |
 | [Mistral](https://legal.mistral.ai/terms/commercial-terms-of-service) (effective 2026-09-25) | Removed | Using its name publicly needs written approval (14.4) and "performance information" is confidential (6.1). These are the business terms; the consumer terms were not read |
 | [OpenRouter](https://openrouter.ai/terms) (updated 2026-08-31) | Removed | Rights in output depend on separate per-model terms (6.1) that were not read. Its red-teaming approval rule (7, 8) does not appear to cover ordinary coding requests. About 50 free requests a day was also too slow |
 | [CodeQL](https://github.com/github/codeql-cli-binaries/blob/main/LICENSE.md) | Removed | Allowed only for academic research or open-source codebases; neither clearly covers real model output. Earlier CodeQL results remain in git history |

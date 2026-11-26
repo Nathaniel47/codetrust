@@ -136,3 +136,17 @@ def test_real_semgrep_flags_the_vulnerable_sql_solution(tmp_path):
     result = scan_runner.scan_files(Path(code_dir))
     assert any(89 in f["cwe"] for f in result["vuln"])
     assert result["safe"] == []
+
+
+@pytest.mark.docker
+def test_real_semgrep_secret_default_rule_ignores_empty_defaults(tmp_path):
+    code_dir = tmp_path / "code"
+    code_dir.mkdir()
+    code_dir.chmod(0o755)
+    (code_dir / "empty.py").write_text(
+        'import os\na = os.getenv("API_TOKEN", "")\nb = os.environ.get("DB_PASSWORD", "")\n'
+    )
+    (code_dir / "literal.py").write_text('import os\na = os.getenv("API_TOKEN", "tok-123456")\n')
+    result = scan_runner.scan_files(code_dir)
+    assert result["empty"] == []
+    assert [f["rule"] for f in result["literal"]] == ["secret-literal-default"]

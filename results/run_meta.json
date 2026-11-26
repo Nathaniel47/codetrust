@@ -1,19 +1,21 @@
 {
   "scoring": {
     "models": [
-      "scripted-60",
-      "scripted-60+reminder"
+      "groq"
     ],
     "scanners": {
       "semgrep": "1.185.0"
     }
   },
-  "git_commit": "00e9f171f75759c532ee2b6444f9ad7ae7c2ff92",
+  "git_commit": "a033ee4818107f76ad10d1598aba01967f92c9bb",
   "generation": {
     "models": {
-      "scripted-60": {
-        "provider": "scripted",
-        "model_id": "scripted-60"
+      "groq": {
+        "provider": "groq",
+        "model_id": "openai/gpt-oss-20b",
+        "params": {
+          "reasoning_effort": "low"
+        }
       }
     },
     "temperature": 0.2,
@@ -30,5 +32,23 @@
       "scripted-60+reminder"
     ],
     "output": "evaluation_dryrun"
+  },
+  "model_verification": {
+    "groq": {
+      "model_id": "openai/gpt-oss-20b",
+      "limits_assumed": {
+        "rpm": 30,
+        "tpm": 8000,
+        "rpd": 1000,
+        "tpd": 200000
+      },
+      "listed": true,
+      "similar": [
+        "openai/gpt-oss-20b",
+        "openai/gpt-oss-120b",
+        "openai/gpt-oss-safeguard-20b"
+      ],
+      "status": "ok"
+    }
   }
 }

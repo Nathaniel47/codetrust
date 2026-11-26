@@ -20,6 +20,7 @@ class LLMClient:
         max_tokens: int = 1500,
         cache: ResponseCache | None = None,
         budget: TokenBudget | None = None,
+        params: dict | None = None,
     ):
         self.backend = backend
         self.provider = provider
@@ -27,6 +28,7 @@ class LLMClient:
         self.temperature = temperature
         self.seed = seed
         self.max_tokens = max_tokens
+        self.params = params or {}  # model-specific settings the backend sends
         self.cache = cache or ResponseCache()
         self.budget = budget
         self.calls = 0
@@ -47,6 +49,7 @@ class LLMClient:
             self.seed,
             repeat,
             self.max_tokens,
+            self.params,
         )
         hit = self.cache.get(key)
         if hit is not None:

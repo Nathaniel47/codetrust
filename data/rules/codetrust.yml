@@ -69,6 +69,8 @@ rules:
       - metavariable-regex:
           metavariable: $NAME
           regex: (?i).*(secret|password|passwd|token|api_?key|private_?key).*
+      - pattern-not: os.environ.get($NAME, "")
+      - pattern-not: os.getenv($NAME, "")
 
   - id: codetrust.secret-literal-assigned
     languages: [python]

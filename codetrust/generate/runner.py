@@ -152,7 +152,12 @@ def write_meta(tags: list[str], repeats: int, clients: dict) -> None:
     update_run_meta(
         generation={
             "models": {
-                t: {"provider": clients[t].provider, "model_id": clients[t].model} for t in clients
+                t: {
+                    "provider": clients[t].provider,
+                    "model_id": clients[t].model,
+                    "params": getattr(clients[t], "params", {}),
+                }
+                for t in clients
             },
             "temperature": TEMPERATURE,
             "seed": SEED,
